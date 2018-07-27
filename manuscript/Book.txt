@@ -8,9 +8,9 @@ the-tree.md
 the-rule.md
 the-task.md
 tying-it-all-together.md
-cookbook/cookbook-intro.md
-cookbook/recipe-1.md
-cookbook/recipe-2.md
-cookbook/recipe-3.md
-cookbook/recipe-4.md
+cookbook-intro.md
+recipe-1.md
+recipe-2.md
+recipe-3.md
+recipe-4.md
 glossary.md
