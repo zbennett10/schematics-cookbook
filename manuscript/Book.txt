@@ -1,1 +1,16 @@
-table-of-contents.txt introduction.txt setting-up-your-env.txt schematics-collection-overview.txt schematics-overview.txt the-source.txt the-tree.txt the-rule.txt the-task.txt tying-it-all-together.txt cookbook-intro.txt recipe-1.txt recipe-2.txt recipe-3.txt recipe-4.txt glossary.txt
+table-of-contents.txt 
+introduction.txt 
+setting-up-your-env.txt 
+schematics-collections-overview.txt 
+schematics-overview.txt 
+the-source.txt 
+the-tree.txt 
+the-rule.txt 
+the-task.txt 
+tying-it-all-together.txt 
+cookbook-intro.txt 
+recipe-1.txt 
+recipe-2.txt 
+recipe-3.txt 
+recipe-4.txt 
+glossary.txt
