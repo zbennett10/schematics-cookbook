@@ -1,0 +1,10 @@
+Rule
+Source
+Tree
+Schematic
+Schematic Collection
+Schematics CLI
+Generator Function
+Task
+Angular CLI
+Schematic Context

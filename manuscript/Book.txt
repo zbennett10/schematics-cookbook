@@ -1,4 +1,3 @@
-table-of-contents.txt 
 introduction.txt 
 setting-up-your-env.txt 
 schematics-collections-overview.txt 
