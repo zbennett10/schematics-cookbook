@@ -1,0 +1,34 @@
+# Schematics Collections
+
+There are no tricks here - the title is self-explanatory. Schematics Collections, simply put, are collections of schematics.
+
+A schematics collection is the means through which Angular's Schematics CLI references individual schematics.
+
+An example use of the Schematics CLI:
+
+`schematics collection_name:schematics_name --args --go --here`
+
+As you can see here, the Schematics CLI is used by passing in a schematics collection name followed by an individual schematic name (or alias as we will see later on). Any additional arguments will be passed into the schematic itself.
+
+A schematic collection's structure might look like the following:
+
+```bash
+/my-schematics-collection
+    /src
+        /schematic-one
+        /schematic-two
+    collection.json
+    package.json
+```
+
+As you can see, the structure is quite simple. First we have our `/src` directory which contains our individual schematic directories. It is in these directories that we will keep our schematic code and templating files (more on this later). 
+
+Next, there is the *`collection.json`* file. This file will contain metadata which will be used to describe the schematics which are found inside of our schematics collection.
+
+Lastly, we find the standard *`package.json`* through which we can pull down any Node dependencies our project requires and perform various other administrative tasks that are beyond the scope of this book. Please see [NPM's documentation](https://docs.npmjs.com/files/package.json)<sup>1</sup> regarding the *`package.json`*.
+
+
+[1]: https://docs.npmjs.com/files/package.json
+
+## The *`collection.json`* File
+

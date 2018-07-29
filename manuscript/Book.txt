@@ -1,5 +1,4 @@
 introduction.txt 
-setting-up-your-env.txt 
 schematics-collections-overview.txt 
 schematics-overview.txt 
 the-source.txt 
@@ -8,6 +7,7 @@ the-rule.txt
 the-task.txt 
 tying-it-all-together.txt 
 cookbook-intro.txt 
+setting-up-your-env.txt 
 recipe-1.txt 
 recipe-2.txt 
 recipe-3.txt 

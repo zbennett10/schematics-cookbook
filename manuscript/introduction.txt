@@ -1,9 +1,9 @@
 # Introduction to Schematics
 
-Angular's 'Schematics', simply put, is a command-line interface tool for developers. Throughout your reading of this book, you will gain key insights regarding Schematics which will allow you to solve developer problems more efficiently. 
+Angular Schematics, simply put, is a scaffolding tool for developers - much like Yeoman. However, Angular Schematics contains zero side effects by safely abstracting away any changes to the filesystem until all transformations are ready to be finalized. It provides a sleek, functional interface through which developers can transform a filesystem. Throughout your reading of this book, you will gain key insights regarding Schematics which will allow you to solve developer problems of varying types more efficiently. 
 
 If you are an Angular developer, odds are that you've used Schematics before - albeit indirectly. Angular CLI commands such as `ng new` and `ng generate component` use Schematics under the hood (specifically the *ng-new* and *component* schematics). It's become almost common knowledge that you can create your own custom schematics that alter Angular's CLI commands. But did you know that you can use Schematics to scaffold out a new Scala project or to kick off a custom Bash script in a new process?
 
-Schematics is a new and exciting tool being developed by the Angular team. This book seeks to illuminate its full potential breaking down some of the key types from Schematics' source code and giving the reader insight through practical code samples (recipes).
+Schematics is a new and exciting tool being developed by the Angular team. However, this scaffolding library is not tied down to Node and Angular alone. This book seeks to illuminate its full potential by breaking down some of the key types from Schematics' source code and giving the reader insight through practical code *'recipes'*.
 
-### Enjoy this Cookbook!
+### Enjoy This Schematics Cookbook!
