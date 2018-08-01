@@ -1,5 +1,6 @@
 introduction.txt 
 schematics-collections-overview.txt 
+schema-json.txt
 schematics-overview.txt 
 the-source.txt 
 the-tree.txt 
