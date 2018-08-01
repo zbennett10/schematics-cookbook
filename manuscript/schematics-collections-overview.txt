@@ -83,4 +83,6 @@ The `aliases` field is an array of aliases which can be used when referencing th
 
 Notice the reference to `one`. It's the `aliases` field in our `collection.json` file which makes this alias available to us through the CLI.
 
-TODO: Unveil hidden and schema fields usage.
+The `schema` field points to a JSON file which provides metadata and validation for its schematic. There will be more on this file later.
+
+Finally, the `hidden` field denotes that our schematic is an internal schematic and is not for public consumption. There will be more about this later when we talk about the ability of schematics to reference other schematics.
