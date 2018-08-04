@@ -1,9 +1,20 @@
 # Schematic Overview
 
+Now it's time to discuss individual schematics. We will start with viewing a sample schematic's structure.
 
-## Schematic Metadata and Validation
+```bash
+/schematic-one
+    /files
+    index.ts
+    index_spec.ts
+    schema.ts
+    schema.json
+```
 
-Check out this commented, example `schema.json`:
+## Schematic Metadata and Validation - `schema.ts` and `schema.json`
+The purpose of the `schema.json` and `schema.ts` files is to provide a schema for the Schematic. These files are used by the Schematics Library and by the local, schematic generator function found in `index.ts`.
+
+Check out this commented, example `schema.json` for our fake schematic - schematic-one:
 ```json
 {
   // JSON schema location (optional)
@@ -54,3 +65,56 @@ Check out this commented, example `schema.json`:
     }
 }
 ```
+
+Now let's view our `schema.ts` file. This file will be used directly by our `index.ts` generator function to validate it's options.
+```javascript
+export interface SchematicOneOptions {
+    name: string;
+    workspace?: string;
+    path?: string;
+}
+```
+
+## The Factory - `index.ts and index_spec.ts`
+Now that we have gone over our schema and described what our schematic's inputs will be, it is time to describe its output. The `index.ts` does just that.
+
+```javascript
+import { 
+    apply, 
+    mergeWith, 
+    chain, 
+    move, 
+    Rule, 
+    template, 
+    url, 
+    Tree, 
+    SchematicContext 
+} from '@angular-devkit/schematics';
+import { strings } from '@angular-devkit/core';
+import { SchematicOneOptions } from './schema';
+
+export default function (options: SchematicOneOptions): Rule {
+
+    return (host: Tree, context: SchematicContext) => {
+      const templateSource = apply(url('./files'), [
+        template({
+          ...strings,
+          ...options
+        }),
+        move(options.path ? options.path : `/{options.name}`)
+      ]);
+
+      const rule = chain([
+          mergeWith(templateSource),
+      ]);
+
+      return rule(host, context);
+    }
+}
+```
+
+The `index.ts` exports the factory or 'generator' for its schematic. The purpose of this function is to output a Rule (more on Rules later) which basically conveys what changes this schematic means to introduce to the file system. For now, just think of a Rule as a function that takes in a Tree and SchematicContext and returns another Tree. Changes that this factory can introduce include but are not limited to: altering existing files, creating new files based upon templates, and running Tasks (more on Tasks later).
+
+## Schematic Templating - `/files`
+
+
