@@ -1,0 +1,56 @@
+# Schematic Overview
+
+
+## Schematic Metadata and Validation
+
+Check out this commented, example `schema.json`:
+```json
+{
+  // JSON schema location (optional)
+  "$schema": "http://json-schema.org/schema",
+
+  // ID which points to a schematic.
+  "id": "SchematicOne",
+
+  // Schematic title.
+  "title": "Schematic One Options Schema",
+
+  /*
+   Type of the options which will get passed into our schematic.
+   */
+  "type": "object",
+
+  /* 
+    An object which defines both command-line arguments and other options which may get passed in by another schematic.
+  */
+  "properties": {
+
+    // Example option
+    "path": {
+      "type": "string",
+      "format": "path",
+      "description": "The path to run schematic one."
+    },
+
+    /* 
+        This is an example of an option which is passed in by another schematic.
+    */
+    "workspace": {
+      "type": "string",
+      "description": "A workspace name.",
+      "$default": {
+        "$source": "workspaceName"
+      }
+    },
+
+    // Example of a command-line-based option
+    "name": {
+      "type": "string",
+      "description": "The name of our output directory.",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      }
+    }
+}
+```
