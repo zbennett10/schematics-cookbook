@@ -5,6 +5,7 @@ the-source.txt
 the-tree.txt 
 the-rule.txt 
 the-task.txt 
+testing-schematics.txt
 tying-it-all-together.txt 
 cookbook-intro.txt 
 setting-up-your-env.txt 

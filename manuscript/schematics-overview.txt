@@ -115,6 +115,8 @@ export default function (options: SchematicOneOptions): Rule {
 
 The `index.ts` exports the factory or 'generator' for its schematic. The purpose of this function is to output a Rule (more on Rules later) which basically conveys what changes this schematic means to introduce to the file system. For now, just think of a Rule as a function that takes in a Tree and SchematicContext and returns another Tree. Changes that this factory can introduce include but are not limited to: altering existing files, creating new files based upon templates, and running Tasks (more on Tasks later).
 
+The `index_spec.ts` file and it's intricacies will be discussed in the `Testing Schematics` chapter.
+
 ## Schematic Templating - `/files`
 
 
