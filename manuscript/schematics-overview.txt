@@ -119,4 +119,4 @@ The `index_spec.ts` file and it's intricacies will be discussed in the `Testing 
 
 ## Schematic Templating - `/files`
 
-
+The optional `/files` directory houses template files and code. Much of the power of Schematics is showcased via it's templating and code generation capabilities. There is much to discuss here - all of which we cover in detail in the `Templating` chapter.
