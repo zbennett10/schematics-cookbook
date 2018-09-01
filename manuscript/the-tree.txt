@@ -1,0 +1,86 @@
+# The Tree
+
+The Tree is the first type we will look at within the Schematics library and is the starting point for all schematics. Trees are the "staging area for changes" in schematics (2018, Angular). Trees are like a virtual, in-memory snapshot of a filesystem. In the following chapters we will look at other types like Rules, Sources and Actions. Trees are created, passed around, and transformed by many of these other types. Trees are a great abstraction through which we can eventually apply atomic operations on files.
+FOOTNOTE
+
+Trees start off either empty or containing a base set of files. Schematics, when modifying a Tree, never directly modify the filesystem. Instead, modifications are applied to the Tree's staging area and the Tree keeps track of the metadata that is associated with changes which are made via Rules (more on these later). 
+
+The Schematics library provides many different methods on Trees which are available. Some of the good ones to know about are included below. 
+
+## Direct Modifications
+There are four different methods which directly modify a Tree. These methods include:
+
+---
+
+`tree.create(path: string, content: Buffer | string): void`
+
+Creates a file at the given path with the given content in the tree
+
+---
+
+`tree.delete(path: string): void`
+
+Deletes a file at the given path in the tree
+
+---
+
+`tree.rename(from: string, to: string): void`
+
+Renames a file in the tree
+
+---
+
+`tree.overwrite(path: string, content: Buffer | string): void`
+
+Overwrites a file at the given path with the given content in the tree
+
+---
+
+## Primary Helpers
+Trees also provide a few primary helper methods. These include:
+
+---
+
+`tree.branch(): Tree`
+
+Creates a copy of a Tree
+
+---
+
+`tree.merge(other: Tree, strategy?: MergeStrategy): void`
+
+Merges two trees using an optional MergeStrategy (more on Strategies later)
+
+---
+
+`tree.apply(action: Action, strategy?: MergeStrategy): void`
+
+Applies a given action to the tree using an optional MergeStrategy.
+
+---
+
+
+## Secondary Helpers
+The following methods are other helpers which you may find of use when using Trees in your schematics.
+
+---
+
+`tree.exists(path: string): boolean`
+
+Determines whether a given directory/file exists at a given path
+
+---
+
+`tree.get(path: string): FileEntry | null`
+
+Fetches a FileEntry from a given tree if it exists
+
+---
+
+`tree.getDir(path: string): DirEntry`
+
+Fetches a DirEntry from a given tree.
+
+---
+
+
