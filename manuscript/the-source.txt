@@ -1,34 +1,39 @@
 # The Source
 
-Our "deep dive" into Schematics will begin with understanding the Angular Schematics type - Source. 
-
-Angular DevKit describes a Source as a "function that creates an entirely new Tree from an empty filesystem".
+Angular describes a Source as a "function that creates an entirely new Tree from an empty filesystem".
 FOOTNOTE - https://github.com/angular/angular-devkit-schematics-builds
 
-A Source's single purpose is to create a Tree. Source's work in conjunction with Rules in order to create and transform Trees. The Schematics library provides the following Source factories which help creators of schematics with most, basic operators. These factories include:
+A Source's single purpose is to return a Tree. Source's work in conjunction with Rules in order to create and transform Trees. The Schematics library provides the following Source factories which help creators of schematics with most, basic operations. These factories include:
 
 --- 
 
-`source(tree: Tree)`
+`source(tree: Tree): Source`
 
-Returns the Tree that is passed in as an argument
-
----
-
-`empty()`
-
-Returns an empty Tree
+Returns a Source that returns the Tree passed in as its solitary value
 
 ---
 
-`apply(source: Source, rules: Rule[])`
+`empty(): Source`
 
-Applies a list of Rules to a Source and returns the resulting Tree
+Returns a Source that returns an empty Tree
 
 ---
 
-`url(url: string)`
+`apply(source: Source, rules: Rule[]): Source`
 
-Returns a Tree with files loaded from a URL as a 'Create' Action
+Applies a list of Rules to a Source and returns a Source that returns the resulting Tree
+
+---
+
+`url(url: string): Source`
+
+Returns a Source that returns a Tree with files loaded from a URL as a CreateAction (more on these later)
+
+---
+## Other Helpers
+
+`asSource(rule: Rule): Source`
+
+Transforms the given Rule into a Source and returns it
 
 ---
