@@ -31,16 +31,32 @@ This function, at its core, merges two trees with an optional MergeStrategy. The
 
 `branchAndMerge(rule: Rule, strategy?: MergeStrategy): Rule`
 
+This function branches the current tree (creating a virtual copy that is performant) and merges it with the given Rule whilst using an optional MergeStrategy.
+
 ---
 
 `filter(predicate: FilePredicate<boolean>): Rule`
 
+The passed in FilePredicate is a function that takes in a path as a string and returns a boolean. This function is useful for filtering files from a Tree. An example FilePredicate could look like the following:
+
+```
+(path: string) => !path.endsWith('.spec.ts')
+
+```
+
+The above FilePredicate filters out test files from a Tree's directory structure.
+
 ---
 
-`forEach(operator: FileOperator)`
+`forEach(operator: FileOperator): Rule`
+
+This function returns a Rule after applying the given FileOperator to every file in the Tree.
+Example: https://stackoverflow.com/questions/48957132/how-to-overwrite-file-with-angular-schematicss
 
 ---
 
-`move(input: string)`
+`move(input: string): Rule`
+
+This function simply moves every file from the current tree into the input path.
 
 ---
