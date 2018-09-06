@@ -1,0 +1,33 @@
+# The Action
+
+Actions are atomic operations that are created by schematics. They are applied and committed to a Tree.
+
+Angular Schematics comes with the following, self-explanatory Actions. All of these Actions implement the base class  - Action.
+
+`CreateFileAction`
+
+`DeleteFileAction`
+
+`OverwriteFileAction`
+
+`RenameFileAction`
+
+---
+
+# The Sink
+
+Sinks are responsible for validating and committing Actions.
+
+The Schematics library provides three separate Sinks for use. Each of these Sinks are implementations of the abstract base class SimpleSinkBase which provides a number of different methods which help customize the validation and committal of Actions in your schematic. These sinks include:
+
+`HostSink`
+
+This sink
+
+`FileSystemSink`
+
+This sink
+
+`DryRunSink`
+
+This sink

@@ -27,7 +27,7 @@ Applies a list of Rules to a Source and returns a Source that returns the result
 
 `url(url: string): Source`
 
-Returns a Source that returns a Tree with files loaded from a URL as a CreateAction (more on these later)
+Returns a Source that returns a Tree with files loaded from a URL as a CreateAction 
 
 ---
 ## Other Helpers
