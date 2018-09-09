@@ -65,7 +65,7 @@ Schematics provides the following types of MergeStrategies:
 
 `tree.apply(action: Action, strategy?: MergeStrategy): void`
 
-Applies a given action to the tree using an optional MergeStrategy.
+Applies a given action to the tree using an optional MergeStrategy (more on Actions later).
 
 ---
 

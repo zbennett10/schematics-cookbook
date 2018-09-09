@@ -18,16 +18,16 @@ Angular Schematics comes with the following, self-explanatory Actions. All of th
 
 Sinks are responsible for validating and committing Actions.
 
-The Schematics library provides three separate Sinks for use. Each of these Sinks are implementations of the abstract base class SimpleSinkBase which provides a number of different methods which help customize the validation and committal of Actions in your schematic. These sinks include:
+The Schematics library provides three separate Sinks for use. They include the HostSink, the FileSystemSink and the DryRunSink. Each of these Sinks are implementations of the abstract base class SimpleSinkBase which provides a number of different methods which help customize the validation and committal of Actions in your schematic. For most use cases, there shouldn't be the need to use Sinks directly. The time that a developer would want to directly use a Sink would be when there are requirements to directly alter/use a Sink's provided commit hooks.These sinks include:
 
 `HostSink`
 
-This sink
+This sink is the parent class of both the FileSystemSink and the DryRunSink. 
 
 `FileSystemSink`
 
-This sink
+This sink is an extension of the HostSink and is the the provided Sink implementation that will directly alter the host filesystem.
 
 `DryRunSink`
 
-This sink
+This sink is an extension of the HostSink that effectively allows dry-running Actions against a Tree - ensuring that changes are not actually made to the host filesystem. 

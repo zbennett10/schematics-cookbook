@@ -1,0 +1,42 @@
+# Templating in Angular Schematics
+
+Schematic templates are located in an individual schematic's `files` directory (See the earlier section, Schematics Overview, for more info). The Schematics library offers a rich selection of utility functions and Rules that allow a schematic to perform custom, project-specific alterations on the template files that it has available to it. In this section, we will look at some of these utility functions and see just what templating looks like in a schematic by focusing on some helpful examples.
+
+## Available Templates
+
+Angular Schematics provides two templates:
+
+---
+
+`contentTemplate<T>(options: T): Rule`
+
+    You can think of the `contentTemplate` as an EJS template that can only be applied to text files. This template is responsible for templating the actual content located within files that are found in your schematic's `files` directory.
+    TODO: GIVE MORE INFO HERE - talk about EJS template language - really angular schematic language
+
+---
+
+`pathTemplate<T extends PathTemplateData>(options: T): Rule`
+    
+    The `pathTemplate` is similar to the `contentTemplate` except that it is responsible for templating file/directory paths names. This template is solely responsible for reading in file/directory names and replacing any instances of '__Z__' with the appropriate value. `pathTemplate` does this by looking at the options passed into it via the `tempalate()` Rule (see the available Rules section below). If this template sees that the value of 'Z' in '__Z__' has a corresponding option in the options object, then this template will replace '__Z__' with the value of the option. 
+    
+    Apart from this, if the value of 'Z' is a function, then this template will call that function and replace '__Z__' with the resulting value. See the available utility functions section below to see what functions Angular Schematics makes available for use with templates.
+
+    **NOTE:** If the value of 'Z' is a function that results in `undefined` or `null`, then the applicable file/directory will be removed.
+
+---
+
+## Available Templating Rules
+
+Angular Schematics provides the following Rules to use when templating in your schematic: 
+
+---
+
+`template<T>(options: T): Rule`
+
+This Rule takes in the given schematic options and applies two templates to the Tree: `pathTemplate` and `contentTemplate`
+
+---
+
+`applyTemplates<T>(options: T): Rule`
+
+---
