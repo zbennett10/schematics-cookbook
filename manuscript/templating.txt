@@ -11,8 +11,44 @@ Angular Schematics provides two templates:
 `contentTemplate<T>(options: T): Rule`
 
     You can think of the `contentTemplate` as an EJS template that can only be applied to text files. This template is responsible for templating the actual content located within files that are found in your schematic's `files` directory.
-    TODO: GIVE MORE INFO HERE - talk about EJS template language - really angular schematic language
 
+    Here is an example file, `__componentName@dasherize__.component.ts`, using this EJS syntax. For more information regarding the specifics of this file's name, see the below section regarding `pathTemplate`.
+
+    `__componentName@dasherize__.component.ts` 
+
+    ```javascript
+        import { Component, OnInit } from '@angular/core';
+
+        @Component({
+            selector: '<%=dasherize(componentName)%>',
+            templateUrl: '<%=dasherize(componentName)%>.component.html',
+        })
+        export class <%= classify(componentName) %>Component {
+            constructor() {}
+        }
+    ```
+
+    In the above code snippet, anything between the EJS syntax `<%= %>` will be be evaluated and replaced with either the value of corresponding option passed into the template or the value of the executed function call. See the section below that discusses the available templating Rules that Angular Schematics provides.
+
+    'If' statements look like this:
+
+    ```javascript
+        import { Component, OnInit } from '@angular/core';
+
+        @Component({
+            selector: '<%=dasherize(componentName)%>',
+            templateUrl: '<%=dasherize(componentName)%>.component.html',
+        })
+        export class <%= classify(componentName) %>Component {
+            constructor() {
+                <% if (logConstruction) { %>
+                    console.log('Created component: <%=dasherize(componentName)%>');
+                <% } %>
+            }
+        }
+    ```
+
+    The example above will log to the console only if the `logConstruction` option evaluates to `true`.
 ---
 
 `pathTemplate<T extends PathTemplateData>(options: T): Rule`
@@ -20,6 +56,12 @@ Angular Schematics provides two templates:
     The `pathTemplate` is similar to the `contentTemplate` except that it is responsible for templating file/directory paths names. This template is solely responsible for reading in file/directory names and replacing any instances of '__Z__' with the appropriate value. `pathTemplate` does this by looking at the options passed into it via the `tempalate()` Rule (see the available Rules section below). If this template sees that the value of 'Z' in '__Z__' has a corresponding option in the options object, then this template will replace '__Z__' with the value of the option. 
     
     Apart from this, if the value of 'Z' is a function, then this template will call that function and replace '__Z__' with the resulting value. See the available utility functions section below to see what functions Angular Schematics makes available for use with templates.
+
+    Functions can also be used alongside option values like this:
+
+    `__componentName@dasherize__.component.ts`
+
+    This syntax passes the value of the `componentName` option into the `dasherize` function and replaces the `__componentName@dasherize__` portion of the file's name with the resulting value.
 
     **NOTE:** If the value of 'Z' is a function that results in `undefined` or `null`, then the applicable file/directory will be removed.
 
@@ -40,3 +82,6 @@ This Rule takes in the given schematic options and applies two templates to the 
 `applyTemplates<T>(options: T): Rule`
 
 ---
+
+## Available Templating Utility Functions
+
