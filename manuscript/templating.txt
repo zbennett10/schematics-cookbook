@@ -63,7 +63,9 @@ Angular Schematics provides two templates:
 
     This syntax passes the value of the `componentName` option into the `dasherize` function and replaces the `__componentName@dasherize__` portion of the file's name with the resulting value.
 
-    **NOTE:** If the value of 'Z' is a function that results in `undefined` or `null`, then the applicable file/directory will be removed.
+**NOTE:** 
+
+If the value of 'Z' is a function that results in `undefined` or `null`, then the applicable file/directory will be removed.
 
 ---
 
@@ -75,7 +77,18 @@ Angular Schematics provides the following Rules to use when templating in your s
 
 `template<T>(options: T): Rule`
 
-This Rule takes in the given schematic options and applies two templates to the Tree: `pathTemplate` and `contentTemplate`
+This Rule applies the templates `pathTemplate` and `contentTemplate` to the Tree using the given options. Here is a simple, example schematic that demonstrates the use of the template Rule:
+
+```javascript
+export default function (options: ExampleOptions): Rule {
+    return mergeWith(apply(url('./files'), [
+            template({
+                ...options
+            })
+        ])
+    );
+}
+```
 
 ---
 
