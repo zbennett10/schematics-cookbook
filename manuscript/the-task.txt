@@ -1,0 +1,31 @@
+# The Task
+
+Tasks are an important feature of almost any schematic. They are basically an abstraction over external commands - Git or Yarn commands, for example.
+
+Angular Schematics currently provides the following Tasks for creators of schematics:
+
+`NodePackageInstallTask` - This Task runs either an `npm install` or `yarn install` command on a project.
+`NodePackageLinkTask` - This Task runs either an `npm link` or `yarn link` command on a project.
+`RepositoryInitializerTask` - This Task runs the `git init` command on a project.
+`RunSchematicTask` - This Task runs an external schematic.
+`TslintFixTask` - This Task runs the `tslint --fix` command on a project.
+
+## Task Use
+
+In the this section, we will see examples of schematic RuleFactories which are set up to run Tasks. Remember the SchematicContext type from the "The Rule" section? Well, look closely, because you're about to see it in action.
+
+```javascript
+import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
+
+export function nodePackageInstallSchematic(options: any): Rule {
+  return (tree: Tree, context: SchematicContext) => {
+    context.addTask(new NodePackageInstallTask());
+    return tree;
+  };
+}
+```
+
+//Provide a note about the above example
+
+//Give a more complex example of existing task
