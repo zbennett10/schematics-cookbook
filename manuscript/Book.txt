@@ -7,7 +7,6 @@ the-source.txt
 the-action-and-the-sink.txt
 templating.txt
 the-task.txt 
-tying-it-all-together.txt 
 cookbook-intro.txt 
 setting-up-your-env.txt 
 recipe-1.txt 
