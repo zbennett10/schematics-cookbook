@@ -1,1 +1,19 @@
-# Setting Up Our Environment
+# Setting Up Your Environment
+
+Step 1: [Install NodeJS](https://nodejs.org/en/download/)
+
+Step 2: Install the Schematics CLI by running this command:
+
+`npm install -g @angular-devkit/schematics-cli`    
+
+Step 3: Create a test schematic by running the following commands:
+
+`cd /your/test/directory/of/choice`
+
+`schematics blank --name=test-schematic --verbose`
+
+`cd test-schematic`
+
+---
+
+*Congratulations!* You have all of the dependencies needed to start creating your very own Angular Schematics. Feel free to familiarize yourself with the simple, test schematic we just created. In the following recipes, we will walkthrough creating some useful schematics of our own.
