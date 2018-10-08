@@ -1,0 +1,20 @@
+# Recipe 1 - Altering `ng generate component`
+
+In this recipe, we will create a schematic that customizes Angular CLI's `ng generate component` command. Under the hood, Angular CLI's `ng generate component` command uses a Angular schematic named `component`. To view this schematic's source code, visit [here](https://github.com/angular/angular-cli/tree/master/packages/schematics/angular/component).
+
+To complete this recipe, you will need to have the Angular CLI installed on your host machine. To install Angular CLI globally on your machine, run the following command:
+
+`npm install -g @angular/cli`
+
+---
+
+## Preparation
+
+First, we will create a new Angular project that will use the schematic we will soon create.
+
+To create a new Angular application run the following commands:
+
+`ng new test-app`
+
+`cd test-app`
+
