@@ -12,9 +12,9 @@ To complete this recipe, you will need to have the Angular CLI installed on your
 
 First, we will create a new Angular project that will use the schematic we will soon create.
 
-To create a new Angular application run the following commands:
+In order to create a new Angular application, we need to run the following command:
 
 `ng new test-app`
 
-`cd test-app`
+You now have a new, baseline Angular application available in the `test-app` directory.
 
