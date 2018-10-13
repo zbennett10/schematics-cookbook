@@ -10,6 +10,8 @@ To complete this recipe, you will need to have the Angular CLI installed on your
 
 ## Preparation
 
+### Our Test Angular Application
+
 First, we will create a new Angular project that will use the schematic we will soon create.
 
 In order to create a new Angular application, we need to run the following command:
@@ -18,3 +20,32 @@ In order to create a new Angular application, we need to run the following comma
 
 You now have a new, baseline Angular application available in the `test-app` directory.
 
+### Our Schematic Collection
+
+Next, we are going to create the schematic collection that will house each one of our recipes. We will call it the `cookbook`.
+
+In the same directory that houses our '`test-app`' Angular application, run the following command:
+
+`schematics blank --name=cookbook`
+
+That command scaffolded the Angular schematic collection which we will use to house all of our 'recipe' schematics.
+
+### Creating Our First Recipe
+
+First things first, we need to change the name of the `cookbook` schematic which was auto-generated inside of our `cookbook` schematic collection when we first created it. 
+
+First off, we need to change this default schematic's metadata located inside of `cookbook/src/collection.json`.
+
+We are going to change this schematic's name from `cookbook` to `cookbook-component`. Here is an example of what our collection.json will look like after these alterations:
+
+```json
+    {
+        "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
+        "schematics": {
+            "cookbook-component": {
+            "description": "Generates a cookbook Angular component",
+            "factory": "./cookbook-component/index#cookbookComponent"
+            }
+        }
+    }
+```
