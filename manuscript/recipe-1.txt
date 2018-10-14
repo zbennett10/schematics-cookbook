@@ -36,16 +36,69 @@ First things first, we need to change the name of the `cookbook` schematic which
 
 First off, we need to change this default schematic's metadata located inside of `cookbook/src/collection.json`.
 
-We are going to change this schematic's name from `cookbook` to `cookbook-component`. Here is an example of what our collection.json will look like after these alterations:
+We are going to change this schematic's name from `cookbook` to `cookbook-component`. Here is an example of what our `collection.json` will look like after these alterations:
 
 ```json
-    {
-        "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
-        "schematics": {
-            "cookbook-component": {
-            "description": "Generates a cookbook Angular component",
-            "factory": "./cookbook-component/index#cookbookComponent"
-            }
+{
+    "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
+    "schematics": {
+        "cookbook-component": {
+        "description": "Generates a cookbook Angular component",
+        "factory": "./cookbook-component/index#cookbookComponent"
         }
     }
+}
 ```
+
+After this, we need to make some changes to our schematic's RuleFactory located in `cookbook/src/cookbook/index.ts`. All that we will need to change is the name of our RuleFactory. Here is an example of what our schematic's RuleFactory will look like after these changes:
+
+```javascript
+import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+
+
+// You don't have to export the function as default. You can also have more than one rule factory
+// per file.
+export function cookbookComponent(_options: any): Rule {
+    return (tree: Tree, _context: SchematicContext) => {
+        return tree;
+    };
+}
+```
+
+Next, we need to change our `cookbook-component` schematic's test file located at `cookbook/src/cookbook/index_spec.ts`. Here is what we want it to look like:
+
+```javascript
+import { Tree } from '@angular-devkit/schematics';
+import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
+import * as path from 'path';
+
+
+const collectionPath = path.join(__dirname, '../collection.json');
+
+
+describe('cookbook-component schematic', () => {
+  it('works', () => {
+    const runner = new SchematicTestRunner('schematics', collectionPath);
+    const tree = runner.runSchematic('cookbook-component', {}, Tree.empty());
+
+    expect(tree.files).toEqual([]);
+  });
+});
+```
+
+Next we need to prepare our template directory structure. We will do this by creating a directory named `files` in our schematic's directory. We need to create this directory at the following path: `cookbook/src/cookbook/files`.
+This directory will house the templates for files that our schematic will create when invoked.
+
+Lastly, we need to create our schematic's schema file. We will create the file located at this path: `cookbook/src/cookbook/schema.json`.
+
+
+## Cookbook-Component Implementation
+
+With our preparation taken care of, it's time to implement the core logic of our schematic.
+
+-- do logic of index_spec.ts
+-- do logic of index.ts
+-- fill out schema.json
+-- fill out files in files dir
+-- give our schematic an alias, other metadata in collection.json
+-- (test everything on host system and run through everything)
