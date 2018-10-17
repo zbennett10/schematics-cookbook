@@ -1,6 +1,6 @@
-# Recipe 1 - Altering `ng generate component`
+# Recipe 1 - Altering Angular CLI's `ng generate component`
 
-In this recipe, we will create a schematic that customizes Angular CLI's `ng generate component` command. Under the hood, Angular CLI's `ng generate component` command uses a Angular schematic named `component`. To view this schematic's source code, visit [here](https://github.com/angular/angular-cli/tree/master/packages/schematics/angular/component).
+In this recipe, we will create a schematic that adds functionality to Angular CLI's `ng generate component` command. Under the hood, Angular CLI's `ng generate component` command uses a Angular schematic named `component`. To view this schematic's source code, visit [here](https://github.com/angular/angular-cli/tree/master/packages/schematics/angular/component).
 
 To complete this recipe, you will need to have the Angular CLI installed on your host machine. To install Angular CLI globally on your machine, run the following command:
 
@@ -94,10 +94,10 @@ Lastly, we need to create our schematic's schema file. We will create the file l
 
 ## Cookbook-Component Implementation
 
-With our preparation taken care of, it's time to implement the core logic of our schematic.
+With our preparation taken care of, it's time to implement the core logic of our schematic. We want our new schematic to augment Angular's existing `component` schematic through which users of the Angular CLI can scaffold out new Angular components through the command `ng generate component`. To make this happen, we will we will need to complete two tasks. Firstly, we need to call the external, `component` schematic that Angular provides. Secondly, we need to chain this schematic with our own functionality that augments the existing `component` schematic by adding an optional flag which will allow for a side-car service to be created alongside this component. When this flag is specified, our schematic will create a `<component-name>.service.ts` file alongside the `<component-name>.component.ts` file previously created by the external, `component` schematic
 
 -- do logic of index_spec.ts
--- do logic of index.ts
+-- do logic of index.ts -> call `component` schematic (external) -> add our own functionality to it (opt service)
 -- fill out schema.json
 -- fill out files in files dir
 -- give our schematic an alias, other metadata in collection.json
