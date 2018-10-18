@@ -30,6 +30,12 @@ In the same directory that houses our '`test-app`' Angular application, run the 
 
 That command scaffolded the Angular schematic collection which we will use to house all of our 'recipe' schematics.
 
+There is only one dependency which we will need in order to implement our recipes. The package `@schematics/angular` will enable us to use some of Angular's own schematics. These are schematics which the Angular CLI uses in order to scaffold out code. We need this package in our own schematics collection in order to use some of Angular's own schematics including it's `component` and `ng-new` schematics.
+
+In order to install this NPM package run the following command in the root directory of our schematics collection:
+
+`npm install --save @schematics/angular`
+
 ### Creating Our First Recipe
 
 First things first, we need to change the name of the `cookbook` schematic which was auto-generated inside of our `cookbook` schematic collection when we first created it. 
