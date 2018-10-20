@@ -100,11 +100,46 @@ Lastly, we need to create our schematic's schema file. We will create the file l
 
 ## Cookbook-Component Implementation
 
-With our preparation taken care of, it's time to implement the core logic of our schematic. We want our new schematic to augment Angular's existing `component` schematic through which users of the Angular CLI can scaffold out new Angular components through the command `ng generate component`. To make this happen, we will we will need to complete two tasks. Firstly, we need to call the external, `component` schematic that Angular provides. Secondly, we need to chain this schematic with our own functionality that augments the existing `component` schematic by adding an optional flag which will allow for a side-car service to be created alongside this component. When this flag is specified, our schematic will create a `<component-name>.service.ts` file alongside the `<component-name>.component.ts` file previously created by the external, `component` schematic
+With our preparation taken care of, it's time to implement the core logic of our schematic. We want our new schematic to augment Angular's existing `component` schematic through which users of the Angular CLI can scaffold out new Angular components through the command `ng generate component`. To make this happen, we will we will need to complete two tasks. Firstly, we need to call the external, `component` schematic that Angular provides. Secondly, we need to chain this schematic with our own functionality that augments the existing `component` schematic by adding an optional flag which will allow for a side-car service to be created alongside this component. When this flag is specified, our schematic will create a `<component-name>.service.ts` file alongside the `<component-name>.component.ts` file previously created by the external, `component` schematic.
+
+### Step One - Schema Creation
+
+The first part of creating our cookbook component schematic will be to create a schema for our schematic. For more information on schemas - please see the "Schematic Metadata and Validation" section of the "Schematics Overview" page earlier in this book.
+
+We will want our simple, component schematic to take in a required `name` argument and an optional `service` argument. Here's what our schema looks like:
+
+```json
+{
+    "$schema": "http://json-schema.org/schema",
+    "id": "CookbookComponent",
+    "title": "Cookbook Component",
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Component name",
+        "$default": {
+          "$source": "argv",
+          "index": 0
+        }
+      },
+      "service": {
+        "description": "Does this component need a side-car service?",
+        "type": "boolean",
+        "default": true,
+        "alias": "s"
+      }
+    },
+    "required": [
+      "name"
+    ]
+  }
+  
+
+```
 
 -- do logic of index_spec.ts
 -- do logic of index.ts -> call `component` schematic (external) -> add our own functionality to it (opt service)
--- fill out schema.json
 -- fill out files in files dir
 -- give our schematic an alias, other metadata in collection.json
 -- (test everything on host system and run through everything)
