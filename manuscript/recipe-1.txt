@@ -42,7 +42,7 @@ First things first, we need to change the name of the `cookbook` schematic which
 
 First off, we need to change this default schematic's metadata located inside of `cookbook/src/collection.json`.
 
-We are going to change this schematic's name from `cookbook` to `cookbook-component`. Here is an example of what our `collection.json` will look like after these alterations:
+We are going to change this schematic's name from `cookbook` to `cookbook-component`. Let's start by altering the `collection.json`. Here is an example of what our `collection.json` will look like after these alterations:
 
 ```json
 {
@@ -56,7 +56,9 @@ We are going to change this schematic's name from `cookbook` to `cookbook-compon
 }
 ```
 
-After this, we need to make some changes to our schematic's RuleFactory located in `cookbook/src/cookbook/index.ts`. All that we will need to change is the name of our RuleFactory. Here is an example of what our schematic's RuleFactory will look like after these changes:
+Next, let's go ahead and rename our `cookbook-component` schematic directory from `cookbook/src/cookbook` to `cookbook/src/cookbook-component`.
+
+After this, we need to make some changes to our schematic's RuleFactory located in `cookbook/src/cookbook-component/index.ts`. All that we will need to change is the name of our RuleFactory. Here is an example of what our schematic's RuleFactory will look like after these changes:
 
 ```javascript
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
@@ -71,7 +73,7 @@ export function cookbookComponent(_options: any): Rule {
 }
 ```
 
-Next, we need to change our `cookbook-component` schematic's test file located at `cookbook/src/cookbook/index_spec.ts`. Here is what we want it to look like:
+Next, we need to change our `cookbook-component` schematic's test file located at `cookbook/src/cookbook-component/index_spec.ts`. Here is what we want it to look like:
 
 ```javascript
 import { Tree } from '@angular-devkit/schematics';
@@ -92,10 +94,10 @@ describe('cookbook-component schematic', () => {
 });
 ```
 
-Next we need to prepare our template directory structure. We will do this by creating a directory named `files` in our schematic's directory. We need to create this directory at the following path: `cookbook/src/cookbook/files`.
+Next we need to prepare our template directory structure. We will do this by creating a directory named `files` in our schematic's directory. We need to create this directory at the following path: `cookbook/src/cookbook-component/files`.
 This directory will house the templates for files that our schematic will create when invoked.
 
-Lastly, we need to create our schematic's schema file. We will create the file located at this path: `cookbook/src/cookbook/schema.json`.
+Lastly, we need to create our schematic's schema file. We will create the file located at this path: `cookbook/src/cookbook-component/schema.json`.
 
 
 ## Cookbook-Component Implementation
@@ -126,7 +128,7 @@ We will want our simple, component schematic to take in a required `name` argume
       "service": {
         "description": "Does this component need a side-car service?",
         "type": "boolean",
-        "default": true,
+        "default": false,
         "alias": "s"
       }
     },
@@ -138,6 +140,9 @@ We will want our simple, component schematic to take in a required `name` argume
 
 ```
 
+With our `schema.json` file successfully created, let's  write some tests for our schematic!
+
+-- go over creating schema.d.ts (for options)
 -- do logic of index_spec.ts
 -- do logic of index.ts -> call `component` schematic (external) -> add our own functionality to it (opt service)
 -- fill out files in files dir
