@@ -30,11 +30,19 @@ In the same directory that houses our '`test-app`' Angular application, run the 
 
 That command scaffolded the Angular schematic collection which we will use to house all of our 'recipe' schematics.
 
-There is only one dependency which we will need in order to implement our recipes. The package `@schematics/angular` will enable us to use some of Angular's own schematics. These are schematics which the Angular CLI uses in order to scaffold out code. We need this package in our own schematics collection in order to use some of Angular's own schematics including it's `component` and `ng-new` schematics.
+We will need to update a couple of these dependencies. Run the following commands in order to update these two packages:
+
+```bash
+npm install --save @angular-devkit/core@latest
+
+npm install --save @angular-devkit/schematics@latest
+```
+
+There is only one, further dependency which we will need in order to implement our recipes. The package `@schematics/angular` will enable us to use some of Angular's own schematics. These are schematics which the Angular CLI uses in order to scaffold out code. We need this package in our own schematics collection in order to use some of Angular's own schematics including it's `component` and `ng-new` schematics.
 
 In order to install this NPM package run the following command in the root directory of our schematics collection:
 
-`npm install --save @schematics/angular`
+`npm install --save @schematics/angular@latest`
 
 ### Creating Our First Recipe
 
@@ -143,18 +151,68 @@ We will want our simple, component schematic to take in a required `name` argume
 With our `schema.json` file successfully created, let's create its functional counterpart - the `schema.d.ts` file. This TypeScript-centric file's (It is aptly-named a declaration file - hence the `.d.`) sole purpose is to provide a usable TypeScript type definition that we can use within a Schematic's RuleFactory. This will give us some added type safety within our RuleFactory's code - allowing us to further validate the options which are passed in to our schematic. We want to create the `schema.d.ts` file within our `cookbook-component` schematic directory. We can easily create our `schema.d.ts` declaration file schema interface by looking at our schematic's `schema.json` file. Here is what our `schema.d.ts` file should look like:
 
 ```javascript
-export interface Schema {
+import { Schema as ComponentOptions} from '@schematics/angular/component/schema';
+
+export interface Schema extends ComponentOptions {
     name: string,
     service?: boolean
 }
 ```
-In the above code we have simply created a `Schema` interface which is modeled after our `cookbook-component` schematic's `schema.json` which says that this schematic will expect a required `name` argument along with an optional `service` argument.
+In the above code we have simply created a `Schema` interface which is modeled after our `cookbook-component` schematic's `schema.json` which says that this schematic will expect a required `name` argument along with an optional `service` argument. We have also created this `Schema` interface to extend Angular's actual `component` schematic which is used by the Angular CLI in order to scaffold a new Angular component. Now all of the schematic options which are available to the `component` schematic will also be available to the `cookbook-component` schematic.
 
 Now that we have successfully modeled our `cookbook-component` schematic's available options, let's write some tests!
 
 ### Step Two - Writing Unit Tests
 
--- do logic of index_spec.ts -- write unit tests that makes sure service file is created/not created correctly
+In this section we will practice a little TDD (Test-Driven Development) by writing our schematic's unit tests before its RuleFactory logic.
+
+First things first, we need to import our recently created `cookbook-component` schema into the `index_spec.ts` file.
+
+```javascript
+import { Schema as CookbookComponentOptions } from './schema';
+```
+Here we are simply importing our Schema and giving it the alias of `CookbookComponentOptions` in order to more accurately convey its functional purpose within the logic of our unit tests.
+
+Now we are ready to write our first unit test. Let's just dive into the code and explain afterwards!
+
+```javascript
+import { Tree } from '@angular-devkit/schematics';
+import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
+import * as path from 'path';
+
+import { Schema as CookbookComponentOptions } from './schema';
+
+const collectionPath = path.join(__dirname, '../collection.json');
+
+
+describe('cookbook-component schematic', () => {
+  it('creates a <comp-name>.service.ts file when the service option is given', () => {
+    const runner = new SchematicTestRunner('schematics', collectionPath);
+    const options: CookbookComponentOptions = {
+      name: 'test-app-name',
+      service: true
+    };
+
+    const tree = runner.runSchematic('cookbook-component', options, Tree.empty());
+
+    expect(tree.files.indexOf(`/${options.name}/${options.name}.service.ts`)).toBeGreaterThan(-1);
+  });
+
+  it('doesn\'t create a <comp-name>.service.ts file when the service option is not given', () => {
+    const runner = new SchematicTestRunner('schematics', collectionPath);
+    const options: CookbookComponentOptions = { name: 'test-app-name' };
+
+    const tree = runner.runSchematic('cookbook-component', options, Tree.empty());
+
+    expect(options.service).toBeFalsy();
+    expect(tree.files.indexOf(`/${options.name}/${options.name}.service.ts`)).toBe(-1);
+  });
+});
+
+```
+
+
+-- explain what we are doing in index_spec.ts above (say if you run `npm run test` you should see one fail/one pass)
 -- do logic of index.ts -> call `component` schematic (external) -> add our own functionality to it (opt service)
 -- fill out files in files dir
 -- give our schematic an alias, other metadata in collection.json
