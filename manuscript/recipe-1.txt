@@ -140,10 +140,21 @@ We will want our simple, component schematic to take in a required `name` argume
 
 ```
 
-With our `schema.json` file successfully created, let's  write some tests for our schematic!
+With our `schema.json` file successfully created, let's create its functional counterpart - the `schema.d.ts` file. This TypeScript-centric file's (It is aptly-named a declaration file - hence the `.d.`) sole purpose is to provide a usable TypeScript type definition that we can use within a Schematic's RuleFactory. This will give us some added type safety within our RuleFactory's code - allowing us to further validate the options which are passed in to our schematic. We want to create the `schema.d.ts` file within our `cookbook-component` schematic directory. We can easily create our `schema.d.ts` declaration file schema interface by looking at our schematic's `schema.json` file. Here is what our `schema.d.ts` file should look like:
 
--- go over creating schema.d.ts (for options)
--- do logic of index_spec.ts
+```javascript
+export interface Schema {
+    name: string,
+    service?: boolean
+}
+```
+In the above code we have simply created a `Schema` interface which is modeled after our `cookbook-component` schematic's `schema.json` which says that this schematic will expect a required `name` argument along with an optional `service` argument.
+
+Now that we have successfully modeled our `cookbook-component` schematic's available options, let's write some tests!
+
+### Step Two - Writing Unit Tests
+
+-- do logic of index_spec.ts -- write unit tests that makes sure service file is created/not created correctly
 -- do logic of index.ts -> call `component` schematic (external) -> add our own functionality to it (opt service)
 -- fill out files in files dir
 -- give our schematic an alias, other metadata in collection.json
