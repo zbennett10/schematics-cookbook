@@ -103,7 +103,20 @@ describe('cookbook-component schematic', () => {
 ```
 
 Next we need to prepare our template directory structure. We will do this by creating a directory named `files` in our schematic's directory. We need to create this directory at the following path: `cookbook/src/cookbook-component/files`.
-This directory will house the templates for files that our schematic will create when invoked.
+This directory will house the templates for files that our schematic will create when invoked. This directory will house one file template with the filename `__name@dasherize__.service.ts`. This templated service file should look like this:
+
+```javascript
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class <%= classify(name) %>Service {
+
+  constructor() { }
+}
+```
+
 
 Lastly, we need to create our schematic's schema file. We will create the file located at this path: `cookbook/src/cookbook-component/schema.json`.
 
@@ -211,9 +224,18 @@ describe('cookbook-component schematic', () => {
 
 ```
 
+In the above test file we have created two unit units. The first unit test runs the `cookbook-component` schematic using the provided `SchematicTestRunner` class and then asserts that a service file is created in the `Tree` when the `service` flag is set to `true`. The second unit test simply tests the opposite condition. 
 
--- explain what we are doing in index_spec.ts above (say if you run `npm run test` you should see one fail/one pass)
+*Note:* By running `npm run test` inside of the project root, you should see one test pass and one test fail.
+
+
+### Step Three - Implementing our Schematic's RuleFactory
+
+Now it's time to code the logic of the `cookbook-component` schematic's `RuleFactory`. Let's jump in!
+
+```javascript
+
+```
 -- do logic of index.ts -> call `component` schematic (external) -> add our own functionality to it (opt service)
--- fill out files in files dir
--- give our schematic an alias, other metadata in collection.json
--- (test everything on host system and run through everything)
+-- go over steps to test in fake angular project (npm build and npm link then cd target angular app and npm link (collection-name-here) then ng g collection-name:schematics-name --blah --blah)
+-- (test these steps one by one on host system and run through everything) 
