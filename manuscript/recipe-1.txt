@@ -8,23 +8,11 @@ To complete this recipe, you will need to have the Angular CLI installed on your
 
 ---
 
-## Preparation
-
-### Our Test Angular Application
-
-First, we will create a new Angular project that will use the schematic we will soon create.
-
-In order to create a new Angular application, we need to run the following command:
-
-`ng new test-app`
-
-You now have a new, baseline Angular application available in the `test-app` directory.
-
 ### Our Schematic Collection
 
 Next, we are going to create the schematic collection that will house each one of our recipes. We will call it the `cookbook`.
 
-In the same directory that houses our '`test-app`' Angular application, run the following command:
+In a directory of our choosing we will run the following command:
 
 `schematics blank --name=cookbook`
 
@@ -33,6 +21,8 @@ That command scaffolded the Angular schematic collection which we will use to ho
 We will need to update a couple of these dependencies. Run the following commands in order to update these two packages:
 
 ```bash
+cd cookbook
+
 npm install --save @angular-devkit/core@latest
 
 npm install --save @angular-devkit/schematics@latest
@@ -64,7 +54,9 @@ We are going to change this schematic's name from `cookbook` to `cookbook-compon
 }
 ```
 
-Next, let's go ahead and rename our `cookbook-component` schematic directory from `cookbook/src/cookbook` to `cookbook/src/cookbook-component`.
+Next, let's go ahead and rename our `cookbook-component` schematic directory from `cookbook/src/cookbook` to `cookbook/src/cookbook-component`. You can do this by running the following command from the `cookbook/src` directory: 
+
+`mv cookbook cookbook-component`
 
 After this, we need to make some changes to our schematic's RuleFactory located in `cookbook/src/cookbook-component/index.ts`. All that we will need to change is the name of our RuleFactory. Here is an example of what our schematic's RuleFactory will look like after these changes:
 
@@ -103,7 +95,7 @@ describe('cookbook-component schematic', () => {
 ```
 
 Next we need to prepare our template directory structure. We will do this by creating a directory named `files` in our schematic's directory. We need to create this directory at the following path: `cookbook/src/cookbook-component/files`.
-This directory will house the templates for files that our schematic will create when invoked. This directory will house one file template with the filename `__name@dasherize__.service.ts`. This templated service file should look like this:
+This directory will house the templates for files that our schematic will create when invoked. For this schematic we will be creating just one template with the filename `__name@dasherize__.service.ts`. After we create this file we will need to make it look like this:
 
 ```javascript
 import { Injectable } from '@angular/core';
@@ -118,7 +110,7 @@ export class <%= classify(name) %>Service {
 ```
 
 
-Lastly, we need to create our schematic's schema file. We will create the file located at this path: `cookbook/src/cookbook-component/schema.json`.
+Lastly, we need to create our schematic's schema file. We will create the file at the following path: `cookbook/src/cookbook-component/schema.json`.
 
 
 ## Cookbook-Component Implementation
@@ -129,36 +121,34 @@ With our preparation taken care of, it's time to implement the core logic of our
 
 The first part of creating our cookbook component schematic will be to create a schema for our schematic. For more information on schemas - please see the "Schematic Metadata and Validation" section of the "Schematics Overview" page earlier in this book.
 
-We will want our simple, component schematic to take in a required `name` argument and an optional `service` argument. Here's what our schema looks like:
+We will want our `cookbook-component` schematic to take in a required `name` argument and an optional `service` argument. Here's what we want this schematic's `schema.json` to look like:
 
 ```json
 {
-    "$schema": "http://json-schema.org/schema",
-    "id": "CookbookComponent",
-    "title": "Cookbook Component",
-    "type": "object",
-    "properties": {
-      "name": {
-        "type": "string",
-        "description": "Component name",
-        "$default": {
-          "$source": "argv",
-          "index": 0
-        }
-      },
-      "service": {
-        "description": "Does this component need a side-car service?",
-        "type": "boolean",
-        "default": false,
-        "alias": "s"
+  "$schema": "http://json-schema.org/schema",
+  "id": "CookbookComponent",
+  "title": "Cookbook Component",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Component name",
+      "$default": {
+        "$source": "argv",
+        "index": 0
       }
     },
-    "required": [
-      "name"
-    ]
-  }
-  
-
+    "service": {
+      "description": "Does this component need a side-car service?",
+      "type": "boolean",
+      "default": false,
+      "alias": "s"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}
 ```
 
 With our `schema.json` file successfully created, let's create its functional counterpart - the `schema.d.ts` file. This TypeScript-centric file's (It is aptly-named a declaration file - hence the `.d.`) sole purpose is to provide a usable TypeScript type definition that we can use within a Schematic's RuleFactory. This will give us some added type safety within our RuleFactory's code - allowing us to further validate the options which are passed in to our schematic. We want to create the `schema.d.ts` file within our `cookbook-component` schematic directory. We can easily create our `schema.d.ts` declaration file schema interface by looking at our schematic's `schema.json` file. Here is what our `schema.d.ts` file should look like:
@@ -178,13 +168,6 @@ Now that we have successfully modeled our `cookbook-component` schematic's avail
 ### Step Two - Writing Unit Tests
 
 In this section we will practice a little TDD (Test-Driven Development) by writing our schematic's unit tests before its RuleFactory logic.
-
-First things first, we need to import our recently created `cookbook-component` schema into the `index_spec.ts` file.
-
-```javascript
-import { Schema as CookbookComponentOptions } from './schema';
-```
-Here we are simply importing our Schema and giving it the alias of `CookbookComponentOptions` in order to more accurately convey its functional purpose within the logic of our unit tests.
 
 Now we are ready to write our first unit test. Let's just dive into the code and explain afterwards!
 
@@ -303,6 +286,12 @@ export function cookbookComponent(options: CookbookComponentOptions): Rule {
 Let's break this down. At a high level, the `cookbook-component` `RuleFactory` above is returning a `Rule` that calls Angular's `component` schematic and merging the resulting `Tree` with an optional, service template `Source`.
 
 We first determine whether or not this schematic needs to generate a service for the soon-to-be-generated component. If a service is not needed, we simply run Angular's `component` schematic and return the resulting `Rule`. However, if a service needs to be generated, the `RuleFactory` fetches the current Angular `WorkspaceSchema` by using the provided utility function `getWorkspace`. This schema is then used to collect the default, project name of the current Angular workspace. In turn, this project name is to be used to collect the current `WorkspaceProject` in the event that a `project` option is not passed into the schematic. We then pass this `WorkspaceProject` into the `buildDefaultPath` utility function in the event that a `path` option is not passed into the `cookbook-component` schematic. The `buildDefaultPath` utility function is used to fetch the correct, default path for a given Angular project. After this, we use the `parseName` utility function in order to generate the correct, normalized `Path` that will house our new service file. Once we have this path, we generate a template `Source` which contains our templated, service file. Finally, we end our schematic by constructing a new `Rule` and `Tree` which is merged with the `Tree` that is initially passed into our schematic using the `branchAndMerge` function. We create this new `Rule` and `Tree` by using the `chain` function. First, we call Angular's `component` schematic through the `externalSchematic` function. The resulting `Rule` generated by `externalSchematic` is then chained with a `Rule` generated by either the `mergeWith` or `noop` function. If a service needs to be generated, we use the `mergeWith` function to merge our service template `Source` with the previous `Rule`. If no service is needed, we generate an empty `Rule` using the `noop` function.
+
+Let's run our unit tests again! First change directory into the root directory of our schematics collection then run:
+
+`npm test`
+
+You should see both tests passing! *TODO:* THIS FAILS FIX THE UNIT TESTS - will need to ammend the index_spec.ts
 
 
 ### Step Four - Testing Our Schematic in an Angular Application
