@@ -172,44 +172,63 @@ In this section we will practice a little TDD (Test-Driven Development) by writi
 Now we are ready to write our first unit test. Let's just dive into the code and explain afterwards!
 
 ```javascript
-import { Tree } from '@angular-devkit/schematics';
-import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
+import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import { Schema as AngularWorkspaceOptions} from '@schematics/angular/workspace/schema';
+import { Schema as AngularApplicationOptions} from '@schematics/angular/application/schema';
+import { Schema as CookbookComponentOptions } from './schema';
 import * as path from 'path';
 
-import { Schema as CookbookComponentOptions } from './schema';
-
 const collectionPath = path.join(__dirname, '../collection.json');
-
+const angularSchematicsCollectionPath = require.resolve('@schematics/angular/collection.json');
 
 describe('cookbook-component schematic', () => {
+  const angularRunner = new SchematicTestRunner('@schematics/angular', angularSchematicsCollectionPath);
+  const cookbookRunner = new SchematicTestRunner('cookbook', collectionPath);
+  const workspaceOptions: AngularWorkspaceOptions = {
+    name: 'test-app-name',
+    newProjectRoot: 'test-app-root',
+    version: '7.0.3',
+  };
+
+  const appOptions: AngularApplicationOptions = {
+    name: 'test-app-name'
+  };
+
+  let angularApplicationTree: UnitTestTree;
+  beforeEach(() => {
+    angularApplicationTree = angularRunner.runSchematic('workspace', workspaceOptions);
+    angularApplicationTree = angularRunner.runSchematic('application', appOptions, angularApplicationTree);
+  });
+
   it('creates a <comp-name>.service.ts file when the service option is given', () => {
-    const runner = new SchematicTestRunner('schematics', collectionPath);
     const options: CookbookComponentOptions = {
-      name: 'test-app-name',
+      name: 'test-component',
       service: true
     };
 
-    const tree = runner.runSchematic('cookbook-component', options, Tree.empty());
+    const tree = cookbookRunner.runSchematic('cookbook-component', options, angularApplicationTree);
 
-    expect(tree.files.indexOf(`/${options.name}/${options.name}.service.ts`)).toBeGreaterThan(-1);
+    expect(tree.files.indexOf(
+      `/test-app-root/${appOptions.name}/src/app/${options.name}/${options.name}.service.ts`
+    )).toBeGreaterThan(-1);
   });
 
   it('doesn\'t create a <comp-name>.service.ts file when the service option is not given', () => {
-    const runner = new SchematicTestRunner('schematics', collectionPath);
-    const options: CookbookComponentOptions = { name: 'test-app-name' };
+    const options: CookbookComponentOptions = { name: 'test-component' , project: 'test-app-name'};
 
-    const tree = runner.runSchematic('cookbook-component', options, Tree.empty());
+    const tree = cookbookRunner.runSchematic('cookbook-component', options, angularApplicationTree);
 
     expect(options.service).toBeFalsy();
-    expect(tree.files.indexOf(`/${options.name}/${options.name}.service.ts`)).toBe(-1);
+    expect(tree.files.indexOf(
+      `/test-app-root/${options.project}/src/app/${options.name}/${options.name}.service.ts`
+    )).toBe(-1);
   });
 });
-
 ```
 
-In the above test file we have created two unit units. The first unit test runs the `cookbook-component` schematic using the provided `SchematicTestRunner` class and then asserts that a service file is created in the `Tree` when the `service` flag is set to `true`. The second unit test simply tests the opposite condition. 
+In the above test file we have created two unit units. Before each unit test, we make sure to run Angular's `workspace` and `application` schematics. Running these schematics helps us to fake the pre-existing `Tree` that will be available to our `cookbook-component` schematic when it is used within an Angular application. `The first unit test runs the `cookbook-component` schematic using the provided `SchematicTestRunner` class and then asserts that a service file is created in the `Tree` when the `service` flag is set to `true`. The second unit test simply tests the opposite condition. 
 
-*Note:* By running `npm run test` inside of the project root, you should see one test pass and one test fail.
+*Note:* By running `npm run test` inside of the project root you can see the status of these tests!
 
 
 ### Step Three - Implementing our Schematic's RuleFactory
@@ -250,11 +269,13 @@ export function cookbookComponent(options: CookbookComponentOptions): Rule {
 
     if (needsToGenerateService) {
       const workspace = getWorkspace(tree);
-      const projectName = !options.project ? workspace.defaultProject : options.project;
+      const projectName = options.project || workspace.defaultProject;
+      if (!options.project) options.project = projectName;
 
       if (!projectName) {
         throw new SchematicsException('The option \'project\' is required');
       }
+      
       const project = getProject(tree, projectName);
 
       if (options.path === undefined || options.path === null) {
@@ -281,6 +302,7 @@ export function cookbookComponent(options: CookbookComponentOptions): Rule {
     );
   };
 }
+
 ```
 
 Let's break this down. At a high level, the `cookbook-component` `RuleFactory` above is returning a `Rule` that calls Angular's `component` schematic and merging the resulting `Tree` with an optional, service template `Source`.
@@ -291,7 +313,7 @@ Let's run our unit tests again! First change directory into the root directory o
 
 `npm test`
 
-You should see both tests passing! *TODO:* THIS FAILS FIX THE UNIT TESTS - will need to ammend the index_spec.ts
+You should see both tests passing!
 
 
 ### Step Four - Testing Our Schematic in an Angular Application
@@ -321,6 +343,3 @@ You should now see a new `test` directory. If you `cd` into this directory you s
 ## Conclusion 
 
 Wow, that was a lot! We've created our first Angular schematic! But we're just getting started. In further recipes we'll dive even deeper into this exciting developer workflow tool!
-
--- go through and test entire recipe
--- once tested, add cookbook to this git repo
