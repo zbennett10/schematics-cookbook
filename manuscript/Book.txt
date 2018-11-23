@@ -11,4 +11,3 @@ cookbook-intro.txt
 setting-up-your-env.txt 
 recipe-1.txt 
 recipe-2.txt 
-recipe-3.txt 
