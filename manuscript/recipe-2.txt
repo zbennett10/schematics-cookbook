@@ -1,6 +1,6 @@
 # Recipe 2 - Scaffolding a new, Node Project
 
-In this recipe, we will create a schematic that will generate a new Node project. We will call this schematic `node-api`. The goal of this schematic will be to save us some time creating an API by generating boilerplate code/configuration for us. We should be able to run our schematic and immediately have a ready-to-use Node server complete with Express, routing, and a basic API.
+In this recipe, we will create a schematic that will generate a new Node project. This will be a simple little project that will save our time by allowing us to easily generate a small Node server. We will call this schematic `node-api`. When we are done, we should be able to run this schematic and have a ready-to-use Node server complete with Express, server hot-reloading for development, and a simple REST implementation.
 
 ---
 
@@ -17,7 +17,7 @@ In this recipe, we will create a schematic that will generate a new Node project
 
 
 
-## `node-api` Implementation
+## Schematic Implementation
 
 With our preparation taken care of, it's time to implement the core logic of our schematic. We want our new schematic to augment Angular's existing `component` schematic through which users of the Angular CLI can scaffold out new Angular components through the command `ng generate component`. To make this happen, we will we will need to complete two tasks. Firstly, we need to call the external, `component` schematic that Angular provides. Secondly, we need to chain this schematic with our own functionality that augments the existing `component` schematic by adding an optional flag which will allow for a side-car service to be created alongside this component. When this flag is specified, our schematic will create a `<component-name>.service.ts` file alongside the `<component-name>.component.ts` file previously created by the external, `component` schematic.
 
@@ -43,4 +43,4 @@ You should see all tests passing for our new schematic!
 -- run the node server 
 -- test that all api endpoints are configured correctly
 
-## Conclusion 
+## Conclusion
