@@ -4,18 +4,36 @@ In this recipe, we will create a schematic that will generate a new Node project
 
 ---
 
-### Getting Started
+## Getting Started
 
--- start off in cookbook directoy from previous recipe
--- add in new schematic including:
-    - add schematic dir
-    - add schematic `/files` dir
-    - add schema.d.ts file
-    - add schema.json file
-    - add in template files to files dir
-    - add schematic to collection.json
+Make sure that you are in the current directory of our `cookbook` schematics collection. If you haven't created your schematics collection yet, please see the preceding recipe's "Our Schematic Collection" section.
 
+First things first, let's generate a blank schematic using the name `node-api`. We can do this by running the following command within the `cookbook` directory:
 
+`schematics blank --name=node-api`
+
+This command will generate a new schematics collection if it is not currently located within an existing collection. Since we ran this command within an existing collection, it simply generated a new, blank schematic for us and updated our `collection.json` accordingly. Pretty nifty, huh?
+
+Next, let's add in some additional boilerplate:
+
+1. `cd` into `cookbook/src/node-api`
+2. Create a template directory named `files`
+3. Create a `schema.d.ts` file
+4. Create a `schema.json` file
+
+With these new files created, let's update our new schematic's reference inside of our schematic collection's `collection.json`.
+
+1. `cd` into `cookbook/src`
+2. Update our `node-api` schematic's reference in the `collection.json` by changing it to the following:
+
+    ```javascript
+      "node-api": {
+        "description": "Generates a new Node API.",
+        "factory": "./node-api/index#nodeApi",
+        "alias": "api"
+      }
+    ```
+    Here we have simply changed our schematic's description and given our schematic an alias so that we can reference it by the name `api` instead of `node-api`.
 
 ## Schematic Implementation
 
@@ -27,7 +45,10 @@ With our preparation taken care of, it's time to implement the core logic of our
 
 It's time to write some unit tests!
 
-### Step Three - Implementing our Schematic's RuleFactory
+### Step Three - Adding Templates
+    - add in template files to files dir
+
+### Step Four - Implementing our Schematic's RuleFactory
 
 Let's see if our tests our passing... First change directory into the root directory of our schematics collection and then run:
 
@@ -36,7 +57,7 @@ Let's see if our tests our passing... First change directory into the root direc
 You should see all tests passing for our new schematic!
 
 
-### Step Four - Functionally Testing Our Schematic
+### Step Five - Functionally Testing Our Schematic
 
 -- npm link it globally and then run the schematic
 -- make sure that all files look good
