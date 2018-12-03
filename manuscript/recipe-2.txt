@@ -35,20 +35,69 @@ With these new files created, let's update our new schematic's reference inside 
     ```
     Here we have simply changed our schematic's description and given our schematic an alias so that we can reference it by the name `api` instead of `node-api`.
 
-## Schematic Implementation
+## Schema Creation
 
-With our preparation taken care of, it's time to implement the core logic of our schematic. We want our new schematic to augment Angular's existing `component` schematic through which users of the Angular CLI can scaffold out new Angular components through the command `ng generate component`. To make this happen, we will we will need to complete two tasks. Firstly, we need to call the external, `component` schematic that Angular provides. Secondly, we need to chain this schematic with our own functionality that augments the existing `component` schematic by adding an optional flag which will allow for a side-car service to be created alongside this component. When this flag is specified, our schematic will create a `<component-name>.service.ts` file alongside the `<component-name>.component.ts` file previously created by the external, `component` schematic.
+In this section we will create the schema for this recipe's schematic. Since the purpose of this schematic is simply to generate some boilerplate we will make its schema fairly simple. We will users of this schematic to be able to give the Node API it generates a name while also being able to specify the directory in which it should be generated.
 
-### Step One - Schema Creation
+Here's what our `schema.json` should look like in order for it to satisfy the above requirements:
 
-### Step Two - Writing Unit Tests
+```javascript
+    {
+        "$schema": "http://json-schema.org/schema",
+        "id": "NodeApi",
+        "title": "Node API",
+        "type": "object",
+        "properties": {
+        "name": {
+            "type": "string",
+            "description": "The name of the generated Node API",
+            "$default": {
+            "$source": "argv",
+            "index": 0
+            }
+        },
+        "directory": {
+            "description": "The directory in which to generate the Node API.",
+            "type": "string",
+            "default": false,
+            "alias": "dir"
+        }
+        },
+        "required": [
+        "name"
+        ]
+  }
+```
+
+And here is what our `schema.d.ts` TypeScript declaration file should look like: 
+
+```javascript
+    export interface Schema {
+        name: string;
+        directory?: string;
+    }
+```
+
+With these two schema files implemented we can be assured that any arguments we pass in to our schematic will be validated properly.
+
+## Writing Unit Tests
 
 It's time to write some unit tests!
 
-### Step Three - Adding Templates
-    - add in template files to files dir
+-- write unit test that checks that all files are available
+-- write unit test that makes sure that files with the name templated include the correct name
+-- write unit test that makes sure that files are outputted to the correct dir when directory arg given
 
-### Step Four - Implementing our Schematic's RuleFactory
+## Creating Our File Templates
+
+- add in template files to files dir
+- template the necessary files (name) correctly
+
+### Implementing the "RuleFactory"
+
+-- create template source from `files` dir
+-- move template source to new directory using `name` arg unless `directory` arg given
+-- run NPM package install task on new project
 
 Let's see if our tests our passing... First change directory into the root directory of our schematics collection and then run:
 
@@ -65,3 +114,5 @@ You should see all tests passing for our new schematic!
 -- test that all api endpoints are configured correctly
 
 ## Conclusion
+
+Good job! With the completion of this second recipe, you now have a working example of how you can use Angluar Schematics to template our a custom Node project. This template could easily be expanded to encompass other languages/environments. For instance, instead of a new Node API, you could have this schematic generate boilerplate for a new Scala or Go project. The possibilities are endless!
