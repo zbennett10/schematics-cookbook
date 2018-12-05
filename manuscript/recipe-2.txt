@@ -28,9 +28,9 @@ With these new files created, let's update our new schematic's reference inside 
 
     ```javascript
       "node-api": {
+        "aliases": [ "api" ],
         "description": "Generates a new Node API.",
-        "factory": "./node-api/index#nodeApi",
-        "alias": "api"
+        "factory": "./node-api/index#nodeApi"
       }
     ```
     Here we have simply changed our schematic's description and given our schematic an alias so that we can reference it by the name `api` instead of `node-api`.
@@ -84,16 +84,109 @@ With these two schema files implemented we can be assured that any arguments we 
 
 It's time to write some unit tests!
 
--- write unit test that checks that all files are available
--- write unit test that makes sure that files with the name templated include the correct name
--- write unit test that makes sure that files are outputted to the correct dir when directory arg given
+The goal in this section will be to write some unit tests which make four different assertions about the capabilities of our schematic. These assertions include:
+
+1. Our schematic creates the necessary Node API boilerplate.
+2. Our schematic is available via the "api" schematic alias.
+3. Our schematic templates boilerplate files with the correct name.
+4. Our schematic generates our Node API at the specified directory when a directory is designated.
+
+Building upon the unit tests that we wrote in our first recipe, here's what we want our unit tests to look like for this schematic:
+
+```javascript
+import { SchematicsException } from '@angular-devkit/schematics';
+import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
+import * as path from 'path';
+
+const collectionPath = path.join(__dirname, '../collection.json');
+
+describe('node-api', () => {
+  it('creates the necessary Node API boilerplate', () => {
+    const runner = new SchematicTestRunner('cookbook', collectionPath),
+            tree = runner.runSchematic('node-api', { name: 'test-app' }),
+       { files } = tree;
+
+    expect(files.length).toBe(11);
+  });
+
+  it('runs successfully via the "api" alias', () => {
+    const runner = new SchematicTestRunner('cookbook', collectionPath),
+            tree = runner.runSchematic('api', { name: 'test-app' }),
+       { files } = tree;
+
+    expect(files.length).toBe(11);
+  });
+
+  it('templates boilerplate files with the correct name', () => {
+    const name   = 'test-app',
+          runner = new SchematicTestRunner('cookbook', collectionPath),
+            tree = runner.runSchematic('api', { name }),
+       filePaths = [
+          `/${name}/package.json`,
+          `/${name}/README.md`
+        ];
+
+    expect(filePaths.every(path => {
+      const fileContents: Buffer | null = tree.read(path);
+      if(!fileContents) throw new SchematicsException(`Unable to read ${fileContents} at path: ${path}`);
+      return fileContents.toString('utf-8').includes('test-app');
+    })).toBe(true);
+  });
+
+  it('creates boilerplate at the correct directory when specified', () => {
+    const name   = 'test-app',
+       directory = '/test/dir',
+          runner = new SchematicTestRunner('cookbook', collectionPath),
+            tree = runner.runSchematic('api', { name, directory }),
+       { files } = tree,
+       filePaths = [
+          `${directory}/${name}/package.json`,
+          `${directory}/${name}/README.md`,
+          `${directory}/${name}/src/server.ts`,
+          `${directory}/${name}/src/routes.ts`,
+          `${directory}/${name}/src/index.types.ts`,
+          `${directory}/${name}/src/mock/books.json`,
+        ];
+
+    expect(filePaths.every(path => files.includes(path))).toBe(true);
+  });
+});
+```
+
+It's pretty simple right? In the above `index_spec.ts` file we are making the above four assertions using four different unit tests. In each one of these unit tests, we are using an instance of the Angular-provided `SchematicTestRunner` class to run our `node-api` schematic. As you can see there is some code that is repeated at the beginning of each one of these unit tests. Concerning this, I'll leave an exercise here for you, the reader, to simplify these unit tests by using the `beforeEach` hook which the `Jasmine` testing framework provides.
 
 ## Creating Our File Templates
 
-- add in template files to files dir
-- template the necessary files (name) correctly
+With our unit tests written, let's lay down the final piece of preparation before we start implementing our schematic's RuleFactory! In a previous section, we created the customary `files` directory which is meant to house any file templates which our schematic will process. In this section we are going to add our templates into this directory by using the following steps:
+
+1. Travel to the [GitHub repo](https://github.com/zbennett10/schematics-recipe-2-node-api) for these files.
+2. Click on the `Clone or download` button on the right side of the page.
+3. Click the `Download ZIP` button.
+4. Unzip the contents of the downloaded folder into our schematic's `files` directory.
+
+When all is said and done, your `files` directory should look like this:
+
+`/files/`
+    `/src/`
+        `/mock/`
+            `books.json`
+        `index.types.ts`
+        `routes.ts`
+        `server.ts`
+    `nodemon.json`
+    `package.json`
+    `README.md`
+    `tsconfig.json`
+    `tslint.json`
 
 ### Implementing the "RuleFactory"
+
+With our templates ready, it's finally time to write the core logic of our schematic!
+
+Let's jump in to the code!
+
+```javascript
+```
 
 -- create template source from `files` dir
 -- move template source to new directory using `name` arg unless `directory` arg given
