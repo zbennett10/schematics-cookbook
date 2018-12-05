@@ -106,7 +106,7 @@ describe('node-api', () => {
             tree = runner.runSchematic('node-api', { name: 'test-app' }),
        { files } = tree;
 
-    expect(files.length).toBe(11);
+    expect(files.length).toBe(9);
   });
 
   it('runs successfully via the "api" alias', () => {
@@ -114,7 +114,7 @@ describe('node-api', () => {
             tree = runner.runSchematic('api', { name: 'test-app' }),
        { files } = tree;
 
-    expect(files.length).toBe(11);
+    expect(files.length).toBe(9);
   });
 
   it('templates boilerplate files with the correct name', () => {
@@ -186,11 +186,51 @@ With our templates ready, it's finally time to write the core logic of our schem
 Let's jump in to the code!
 
 ```javascript
+import { strings } from '@angular-devkit/core';
+import {
+  Rule,
+  SchematicContext,
+  Tree,
+  apply,
+  url,
+  template,
+  move,
+  chain,
+  mergeWith
+} from '@angular-devkit/schematics';
+import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
+import { Schema as NodeApiSchematicOptions } from './schema';
+
+export function nodeApi(options: NodeApiSchematicOptions): Rule {
+    const templateDirectory = `${options.directory ? options.directory : ''}/${options.name}`;
+    const templateSource = apply(
+      url('./files'), [
+        template({
+          ...strings,
+          'if-flat': (s: string) => s,
+          ...options,
+        }),
+        move(templateDirectory)
+      ]
+    );
+
+    return chain([
+      mergeWith(templateSource),
+      installNodeDependencies(templateDirectory)
+    ]);
+}
+
+function installNodeDependencies(workingDirectory: string): Rule {
+  return (tree: Tree, context: SchematicContext) => {
+    const packageInstallOptions = { workingDirectory };
+    context.addTask(new NodePackageInstallTask(packageInstallOptions));
+
+    return tree;
+  }
+}
 ```
 
--- create template source from `files` dir
--- move template source to new directory using `name` arg unless `directory` arg given
--- run NPM package install task on new project
+TODO: discuss whats happening here!
 
 Let's see if our tests our passing... First change directory into the root directory of our schematics collection and then run:
 
