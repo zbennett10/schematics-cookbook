@@ -4,7 +4,7 @@ Step 1: [Install NodeJS](https://nodejs.org/en/download/)
 
 Step 2: Install the Schematics CLI by running this command:
 
-`npm install -g @angular-devkit/schematics-cli`    
+`npm install -g @angular-devkit/schematics-cli`
 
 Step 3: Create a test schematic by running the following commands:
 
