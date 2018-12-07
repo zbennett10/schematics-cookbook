@@ -242,10 +242,43 @@ You should see all tests passing for our new schematic!
 
 ### Step Five - Functionally Testing Our Schematic
 
--- npm link it globally and then run the schematic
--- make sure that all files look good
--- run the node server
--- test that all api endpoints are configured correctly
+It's time to put this new schematic to the test! In the following steps we will use our new schematic to generate a Node API for us and verify that it works.
+
+First, let's use `npm link` to make our newly updated schematic collection available globally so that we can easily generate our new project. Before running the following command, make sure that you are in the root folder of our schematic collection (`cookbook`). Once there, run `npm link`.
+
+With our updated `cookbook` schematic collection available for use, we can now use our new `node-api` schematic.
+
+First, `cd` into a directory of your choosing. Once in your chosen directory, run the following command to use our new schematic:
+
+`schematics cookbook:api --name=test-api`
+
+After running this command you should see similar output to the following:
+
+```s
+CREATE /test/README.md (43 bytes)
+CREATE /test/nodemon.json (105 bytes)
+CREATE /test/package.json (1040 bytes)
+CREATE /test/tsconfig.json (413 bytes)
+CREATE /test/tslint.json (897 bytes)
+CREATE /test/src/index.types.ts (161 bytes)
+CREATE /test/src/routes.ts (3551 bytes)
+CREATE /test/src/server.ts (301 bytes)
+CREATE /test/src/mock/books.json (18751 bytes)
+...
+```
+
+You should also see evidence of `npm` installing all of our new project's Node dependencies! Now let's check out our new schematic. Run the following command to enter in to your new project's root directory:
+
+`cd test-api`
+
+Let's test that our Node API works by doing the following:
+
+1. Run `npm start` in your terminal.
+2. Navigate to `localhost:8080` in your browser.
+
+You should see a list of books in your browser window!
+
+You also have a working development environment by running the command `npm run dev`.
 
 ## Conclusion
 
