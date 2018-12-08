@@ -1,50 +1,50 @@
 # The Rule
 
-Rules are simply functions that operate on Trees and return a new Tree with modifications.
+`Rules` are simply functions that operate on `Trees` and return a new `Tree` with modifications.
 
-Rules have two inputs and 1 output. The inputs are a Tree and a SchematicContext. The output is a Tree.
+`Rules` always have two inputs and one output. The inputs that a `Rule` can always expect are a `Tree` and a `SchematicContext` (in that order). The output is always a `Tree`.
 
-Rules are the base of schematics and are where schematic authors will write the majority of their schematic's logic.
+`Rules` are where the magic happens! `Rules` provide the core functionality of a schematic. They are where schematic authors will write the majority of the code which will comprise the logic of their schematics.
 
-The Schematics library provides numerous Rule factories. These following factories are the main functions which will be used by developers who wish to create or customize a schematic.
+The Schematics library provides numerous functions which create `Rules` (otherwise known as `RuleFactories`). The following factories are the main functions which will be used by developers who wish to create or customize a schematic. The `Rules` which are created by these functions are incredibly useful.
 
 ## Rule Factories
+
 ---
 
 `noop(): Rule`
 
-Returns a rule that does nothing on the tree that is passed in to it
+This `RuleFactory` returns an empty `Rule`. This is useful within boolean contexts.
 
 ---
 
 `chain(rules: Rule[]): Rule`
 
-This is an oft used Rule factor which returns a rule that chains the rules passed in.
+This is an oft-used `RuleFactory` which returns a final `Rule` after chaining all `Rules` that are passed in to it.
 
 ---
 
 `mergeWith(source: Source, strategy?: MergeStrategy): Rule`
 
-This function, at its core, merges two trees with an optional MergeStrategy. The first tree in the merge is taken from calling the Source function that is passed in to the 'mergeWith' Rule factory. The second tree is passed in to the resulting Rule.
-    
+This function, at its core, merges two `Trees` with an optional `MergeStrategy`. The first `Tree` in the merge is taken from calling the `Source` function that is passed in to `mergeWith` (more on the `Source` later). The second `Tree` is passed in to the resulting `Rule`. This function is incredibly useful when it comes to templating!
+
 ---
 
 `branchAndMerge(rule: Rule, strategy?: MergeStrategy): Rule`
 
-This function branches the current tree (creating a virtual copy that is performant) and merges it with the given Rule whilst using an optional MergeStrategy.
+This function branches the current `Tree` (creating a performant, virtual copy) and merges it with the given `Rule` whilst using an optional `MergeStrategy`.
 
 ---
 
 `filter(predicate: FilePredicate<boolean>): Rule`
 
-The passed in FilePredicate is a function that takes in a path as a string and returns a boolean. This function is useful for filtering files from a Tree. An example FilePredicate could look like the following:
+In the `filter` function, the passed in `FilePredicate` is itself a function that takes in a path as a string and returns a boolean. This function is useful for filtering out files from a `Tree`. An example `FilePredicate` could look like the following:
 
-```
+```javascript
 (path: string) => !path.endsWith('.spec.ts')
-
 ```
 
-The above FilePredicate filters out test files from a Tree's directory structure.
+The above `FilePredicate` filters out test files from a `Tree`'s directory structure.
 
 ---
 
