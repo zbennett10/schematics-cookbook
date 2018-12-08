@@ -51,12 +51,11 @@ The above `FilePredicate` filters out test files from a `Tree`'s directory struc
 `forEach(operator: FileOperator): Rule`
 
 This function returns a Rule after applying the given FileOperator to every file in the Tree.
-Example: https://stackoverflow.com/questions/48957132/how-to-overwrite-file-with-angular-schematicss
 
 ---
 
 `move(input: string): Rule`
 
-This function simply moves every file from the current tree into the input path.
+This function simply moves every file from the current `Tree` into the given input path.
 
 ---
