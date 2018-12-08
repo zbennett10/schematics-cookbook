@@ -1,20 +1,21 @@
 # Schematic Overview
 
-Now it's time to discuss individual schematics. We will start with viewing a sample schematic's structure.
+As we journey deeper into the world of Angular Schematics, it's now time to discover the power of individual schematics themselves. Let's start by viewing the structure of a schematic.
 
-```bash
+```s
 /schematic-one
-    /files
-    index.ts
-    index_spec.ts
-    schema.ts
-    schema.json
+  /files
+  index.ts
+  index_spec.ts
+  schema.ts
+  schema.json
 ```
 
 ## Schematic Metadata and Validation - `schema.ts` and `schema.json`
-The purpose of the `schema.json` and `schema.ts` files is to provide a schema for the Schematic. These files are used by the Schematics Library and by the local, schematic generator function found in `index.ts`.
+The purpose of the `schema.json` and `schema.ts` files is to provide a schema for the schematic. These files are used by the Schematics Library and by the local `RuleFactory` found within the `index.ts`.
 
-Check out this commented, example `schema.json` for our fake schematic - schematic-one:
+Check out this commented example `schema.json` for a fake schematic - `schematic-one`:
+
 ```json
 {
   // JSON schema location (optional)
@@ -31,8 +32,9 @@ Check out this commented, example `schema.json` for our fake schematic - schemat
    */
   "type": "object",
 
-  /* 
-    An object which defines both command-line arguments and other options which may get passed in by another schematic.
+  /*
+    An object which defines both command-line arguments and other
+    options which may get passed in by another schematic.
   */
   "properties": {
 
@@ -43,7 +45,7 @@ Check out this commented, example `schema.json` for our fake schematic - schemat
       "description": "The path to run schematic one."
     },
 
-    /* 
+    /*
         This is an example of an option which is passed in by another schematic.
     */
     "workspace": {
@@ -66,34 +68,36 @@ Check out this commented, example `schema.json` for our fake schematic - schemat
 }
 ```
 
-Now let's view our `schema.ts` file. This file will be used directly by our `index.ts` generator function to validate it's options.
+Now let's view our `schema.ts` file. This file will be used directly by our schematic's `RuleFactory` to validate it's options.
+
 ```javascript
-export interface SchematicOneOptions {
-    name: string;
-    workspace?: string;
-    path?: string;
+export interface Schema {
+  name: string;
+  workspace?: string;
+  path?: string;
 }
 ```
 
-## The Factory - `index.ts and index_spec.ts`
+## The RuleFactory
+
 Now that we have gone over our schema and described what our schematic's inputs will be, it is time to describe its output. The `index.ts` does just that.
 
 ```javascript
-import { 
-    apply, 
-    mergeWith, 
-    chain, 
-    move, 
-    Rule, 
-    template, 
-    url, 
-    Tree, 
-    SchematicContext 
+import {
+    apply,
+    mergeWith,
+    chain,
+    move,
+    Rule,
+    template,
+    url,
+    Tree,
+    SchematicContext
 } from '@angular-devkit/schematics';
 import { strings } from '@angular-devkit/core';
 import { SchematicOneOptions } from './schema';
 
-export default function (options: SchematicOneOptions): Rule {
+export default function schematicOne(options: SchematicOneOptions): Rule {
 
     return (host: Tree, context: SchematicContext) => {
       const templateSource = apply(url('./files'), [
@@ -113,10 +117,10 @@ export default function (options: SchematicOneOptions): Rule {
 }
 ```
 
-The `index.ts` exports the factory or 'generator' for its schematic. The purpose of this function is to output a Rule (more on Rules later) which basically conveys what changes this schematic means to introduce to the file system. For now, just think of a Rule as a function that takes in a Tree and SchematicContext and returns another Tree. Changes that this factory can introduce include but are not limited to: altering existing files, creating new files based upon templates, and running Tasks (more on Tasks later).
+The `index.ts` exports the `RuleFactory` for its schematic. The purpose of this `RuleFactory` is to output a `Rule` (more on the `Rule` later) which basically conveys what changes this schematic means to introduce to the file system. For now, just think of a `Rule` as a function that takes in a `Tree` and `SchematicContext` and returns another `Tree` containing changes. Changes that this factory can introduce include but are not limited to: altering existing files, creating new files based upon templates, and running `Tasks` (more on the `Task` later).
 
-The `index_spec.ts` file and it's intricacies will be discussed in the `Testing Schematics` chapter.
+The `index_spec.ts` file is simply the test file for our schematic. In this file we define unit tests which we can run against our schematic in isolation in order to make sure that it's working properly. You can see examples of `index_spec.ts` files when we start building our own schematics later in the book.
 
-## Schematic Templating - `/files`
+## Schematic Templating
 
-The optional `/files` directory houses template files and code. Much of the power of Schematics is showcased via it's templating and code generation capabilities. There is much to discuss here - all of which we cover in detail in the `Templating` chapter.
+Lastly, let's learn a bit about the ability of a schematic to use templates. The optional `/files` directory houses template files/directories which the schematic can use to generate custom code/files. Much of the power of Schematics is showcased via it's templating and code generation capabilities. There is much to discuss here - all of which we cover in detail within the *"Templating"* section later in this book.
