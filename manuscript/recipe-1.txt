@@ -340,6 +340,6 @@ Voila!
 
 You should now see a new `test` directory. If you `cd` into this directory you should now see your new test component along with a side-car, `test.service.ts` file!
 
-## Conclusion 
+## Conclusion
 
 Wow, that was a lot! We've created our first Angular schematic! But we're just getting started. In further recipes we'll dive even deeper into this exciting developer workflow tool!

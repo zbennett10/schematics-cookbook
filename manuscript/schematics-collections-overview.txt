@@ -8,31 +8,28 @@ An example use of the Schematics CLI:
 
 `schematics collection_name:schematics_name --args --go --here`
 
-As you can see here, the Schematics CLI is used by passing in a schematics collection name followed by an individual schematic name (or alias as we will see later on). Any additional arguments will be passed into the schematic itself.
+As you can see here, the Schematics CLI is used by passing in a schematics collection name followed by a colon and an individual schematic name (or alias as we will see later on). Any additional arguments will be passed into the schematic itself and will be consumed by that schematic's `RuleFactory`.
 
 A schematic collection's structure might look like the following:
 
-```bash
+```s
 /my-schematics-collection
-    /src
-        /schematic-one
-        /schematic-two
-    collection.json
-    package.json
+  /src
+      /schematic-one
+      /schematic-two
+  collection.json
+  package.json
 ```
 
-As you can see, the structure is quite simple. First we have our `/src` directory which contains our individual schematic directories. It is in these directories that we will keep our schematic code and templating files (more on this later). 
+As you can see, the structure for a collection is quite simple. First we have our `/src` directory which itself contains individual schematic directories. It is in these individual schematic directories that we will keep individual schematic code and templates - but more on this later!
 
-Next, there is the *`collection.json`* file. This file will contain metadata which will be used to describe the schematics which are found inside of our schematics collection.
+Next, there is the `collection.json` file. This file contains metadata which is used to describe the schematics which are found inside of a schematics collection.
 
-Lastly, we find the standard *`package.json`* through which we can pull down any Node dependencies our project requires and perform various other administrative tasks that are beyond the scope of this book. Please see [NPM's documentation](https://docs.npmjs.com/files/package.json)<sup>1</sup> regarding the *`package.json`*.
-
-
-[1]: https://docs.npmjs.com/files/package.json
+Lastly, we find the standard `package.json` which can be found in most `NPM`/`Node` based projects. We use the metadata located within the `package.json` to help install any Node dependencies our project requires and to perform various other administrative tasks that are beyond the scope of this book. Please see [NPM's documentation](https://docs.npmjs.com/files/package.json) for more information regarding the `package.json`[^1].
 
 ## Schematic Collection Metadata
 
-Collections are defined by their `collection.json` file. See our example `collection.json` file below.
+As mentioned above, a schematic collection's metadata lives within the `collection.json` file. It is in this file that a schematic collection defines what collections are available to users. Check out this example `collection.json` file below.
 
 ```json
 {
@@ -50,19 +47,20 @@ Collections are defined by their `collection.json` file. See our example `collec
 }
 ```
 
-Now lets dissect the above. The `$schema` field is completely optional. It's sole purpose is to point to the schema for this particular JSON document which, in our case, is Angular's schematic collection schema.
+Let's dissect what's happening in the above file. First off, the `$schema` field is completely optional. It's sole purpose is to point to the schema for this particular JSON document which, in our case, is Angular's own schematic collection schema. I recommend that you use Angular's schema in your own schematics but it is possible to create their own.
 
-The `schematics` field denotes our individual schematics - all of whom's names comprise individual fields themselves within the `schematics` field's value (an object).
+The `schematics` field denotes our individual schematics - all of whom's names comprise individual fields themselves within the `schematics` field's value.
 
-Each of the individual schematics themselves, in this example, are solely comprised of an object with `description` and `factory` fields. The `description` field is self-explanatory. The `factory` field here denotes a path to it's schematic's generator function (more on generator functions later). Of special note here is the `index#schematicOne` reference. This tells the Schematics library to reference the `schematicOne` generator function that is exported from the `index` file within the `schematic-one` schematic.
+Each of the individual schematics themselves, in this example, are solely comprised of an object with `description` and `factory` fields. The `description` field is self-explanatory. The `factory` field here denotes a path to it's schematic's `RuleFactory` (more on this later). Of special note here is the `index#schematicOne` reference. This tells the Schematics library to reference the `schematicOne` `RuleFactory` that is exported from the `index.ts` file within the `schematic-one` schematic.
 
-Now let's look at another, more advanced, example.
+Let's look at another, more advanced, example.
+
 ```json
 {
   "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
     "schematic-one": {
-      "aliases": ["one"],
+      "aliases": [ "one" ],
       "description": "A schematic description.",
       "factory": "./schematic-one/index#schematicOne",
       "schema": "./schematic-one/schema.json"
@@ -76,6 +74,7 @@ Now let's look at another, more advanced, example.
   }
 }
 ```
+
 Here we introduce three new fields: `aliases`, `schema`, and `hidden`.
 
 The `aliases` field is an array of aliases which can be used when referencing this schematic. Using the above example, running `schematic-one` via the Schematics CLI would look something like this:
@@ -83,6 +82,8 @@ The `aliases` field is an array of aliases which can be used when referencing th
 
 Notice the reference to `one`. It's the `aliases` field in our `collection.json` file which makes this alias available to us through the CLI.
 
-The `schema` field points to a JSON file which provides metadata and validation for its schematic. There will be more on this file later.
+The `schema` field points to a JSON file which provides metadata and validation for its corresponding schematic. There will be more on this file and validation in later sections.
 
 Finally, the `hidden` field denotes that our schematic is an internal schematic and is not for public consumption. There will be more about this later when we talk about the ability of schematics to reference other schematics.
+
+[^1]: https://docs.npmjs.com/files/package.json

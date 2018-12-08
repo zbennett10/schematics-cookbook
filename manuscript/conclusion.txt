@@ -1,0 +1,11 @@
+# Conclusion
+
+You've reached the end of this cookbook but it's only the beginning! You now have a solid understanding of Angular Schematics and its inner workings.
+
+We learned about the power of a schematics collection as an easily usable/sharable developer CLI toolkit and we discovered the primary classes/types that Angular Schematics provides through its public API like the `Tree`, the `Rule`, and the `Source`.
+
+Then we gained some practical experience by building our own schematics. We learned how to use Angular Schematics to augment existing schematics in *"Recipe 1"*. In *"Recipe 2"* we discovered how we can even use Angular Schematics to accurately generate boilerplate for a project that doesn't have to be an Angular project.
+
+The possibilities here are truly endless. Angular Schematics can be used to augment Angular's own schematics or other, third party schematics. Not only this, Angular Schematics can be used to generate templated code/files on the fly for any type of project.
+
+From generating templated Dockerfiles on the fly to altering Angular CLI's `ng-new` command to better fit your organization's structural opinions, Angular Schematics is flexible and robust. So what are you waiting for? Please go create some and share them with the world!
