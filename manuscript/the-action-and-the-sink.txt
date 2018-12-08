@@ -1,8 +1,8 @@
 # The Action
 
-Actions are atomic operations that are created by schematics. They are applied and committed to a Tree.
+`Actions` are simply atomic, file operations. `Actions` can be applied and committed to a Tree.
 
-Angular Schematics comes with the following, self-explanatory Actions. All of these Actions implement the base class  - Action.
+Angular Schematics comes with the following, self-explanatory `Actions`. All of these `Actions` implement the base class  - `Action`.
 
 `CreateFileAction`
 
@@ -12,22 +12,28 @@ Angular Schematics comes with the following, self-explanatory Actions. All of th
 
 `RenameFileAction`
 
----
+{pagebreak}
 
 # The Sink
 
-Sinks are responsible for validating and committing Actions.
+`Sinks` are responsible for validating and committing `Actions`.
 
-The Schematics library provides three separate Sinks for use. They include the HostSink, the FileSystemSink and the DryRunSink. Each of these Sinks are implementations of the abstract base class SimpleSinkBase which provides a number of different methods which help customize the validation and committal of Actions in your schematic. For most use cases, there shouldn't be the need to use Sinks directly. The time that a developer would want to directly use a Sink would be when there are requirements to directly alter/use a Sink's provided commit hooks.These sinks include:
+The Schematics library provides three separate `Sinks` for use. These include the `HostSink`, the `FileSystemSink` and the `DryRunSink`. Each of these `Sinks` are implementations of the abstract base class `SimpleSinkBase` which provides a number of different methods that help schematic developers customize the validation and committal of `Actions` in their schematics. For most use cases, there shouldn't be the need to utilize `Sinks` directly. The only time that a developer would want to directly use a `Sink` would be when there are requirements to directly alter/use a `Sink`'s provided commit hooks. Here are the available `Sinks` along with their descriptions:
+
+---
 
 `HostSink`
 
-This sink is the parent class of both the FileSystemSink and the DryRunSink. 
+This sink is the parent class of both the FileSystemSink and the DryRunSink. You shouldn't use this directly.
+
+---
 
 `FileSystemSink`
 
-This sink is an extension of the HostSink and is the the provided Sink implementation that will directly alter the host filesystem.
+This `Sink` is an extension of the `HostSink` and is the the provided `Sink` implementation that will directly alter the host filesystem.
+
+---
 
 `DryRunSink`
 
-This sink is an extension of the HostSink that effectively allows dry-running Actions against a Tree - ensuring that changes are not actually made to the host filesystem. 
+This `Sink` is an extension of the `HostSink` that effectively allows dry-running `Actions` against a `Tree`. This ensures that changes are not actually made to the host filesystem.
