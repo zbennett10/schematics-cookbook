@@ -1,6 +1,6 @@
 # Recipe 1 - Altering Angular's Component Schematic
 
-In this recipe, we will create a schematic that adds functionality to Angular CLI's `ng generate component` command. Under the hood, Angular CLI's `ng generate component` command uses a Angular schematic named `component`. To view this schematic's source code, visit [here](https://github.com/angular/angular-cli/tree/master/packages/schematics/angular/component).
+In this recipe, we will create a schematic that adds functionality to Angular CLI's `ng generate component` command. Under the hood, Angular CLI's `ng generate component` command uses an Angular schematic named `component`. You can view this schematic's source code [here](https://github.com/angular/angular-cli/tree/master/packages/schematics/angular/component).
 
 To complete this recipe, you will need to have the Angular CLI installed on your host machine. To install Angular CLI globally on your machine, run the following command:
 
@@ -8,19 +8,19 @@ To complete this recipe, you will need to have the Angular CLI installed on your
 
 ---
 
-### Our Schematic Collection
+## Our Schematic Collection
 
-Next, we are going to create the schematic collection that will house each one of our recipes. We will call it the `cookbook`.
+First things first, let's create the schematic collection that will house each one of our recipes. We will call it the `cookbook`.
 
-In a directory of our choosing we will run the following command:
+In a directory of your choosing, run the following command:
 
 `schematics blank --name=cookbook`
 
-That command scaffolded the Angular schematic collection which we will use to house all of our 'recipe' schematics.
+That command just scaffolded the Angular schematic collection which we will use to house all of our schematic "recipes".
 
-We will need to update a couple of these dependencies. Run the following commands in order to update these two packages:
+Now let's update a couple of our dependencies. Run the following commands in order to update these two NPM packages:
 
-```bash
+```s
 cd cookbook
 
 npm install --save @angular-devkit/core@latest
@@ -28,15 +28,15 @@ npm install --save @angular-devkit/core@latest
 npm install --save @angular-devkit/schematics@latest
 ```
 
-There is only one, further dependency which we will need in order to implement our recipes. The package `@schematics/angular` will enable us to use some of Angular's own schematics. These are schematics which the Angular CLI uses in order to scaffold out code. We need this package in our own schematics collection in order to use some of Angular's own schematics including it's `component` and `ng-new` schematics.
+There is only one, further dependency which we will need in order to implement our recipes. The package `@schematics/angular` will enable us to use some of Angular's own schematics. These are schematics which the Angular CLI uses in order to scaffold out code. We need this package in our own schematics collection in order to use some of Angular's own schematics specifically it's `component` schematic.
 
 In order to install this NPM package run the following command in the root directory of our schematics collection:
 
 `npm install --save @schematics/angular@latest`
 
-### Creating Our First Recipe
+## Creating Our First Recipe
 
-First things first, we need to change the name of the `cookbook` schematic which was auto-generated inside of our `cookbook` schematic collection when we first created it. 
+Now we need to change the name of the `cookbook` schematic which was auto-generated inside of our `cookbook` schematic collection when we first created it.
 
 First off, we need to change this default schematic's metadata located inside of `cookbook/src/collection.json`.
 
@@ -44,25 +44,24 @@ We are going to change this schematic's name from `cookbook` to `cookbook-compon
 
 ```json
 {
-    "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
-    "schematics": {
-        "cookbook-component": {
-        "description": "Generates a cookbook Angular component",
-        "factory": "./cookbook-component/index#cookbookComponent"
-        }
-    }
+  "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+      "cookbook-component": {
+      "description": "Generates a cookbook Angular component",
+      "factory": "./cookbook-component/index#cookbookComponent"
+      }
+  }
 }
 ```
 
-Next, let's go ahead and rename our `cookbook-component` schematic directory from `cookbook/src/cookbook` to `cookbook/src/cookbook-component`. You can do this by running the following command from the `cookbook/src` directory: 
+Next, let's go ahead and rename our `cookbook-component` schematic directory from `cookbook/src/cookbook` to `cookbook/src/cookbook-component`. You can do this by running the following command from the `cookbook/src` directory:
 
 `mv cookbook cookbook-component`
 
-After this, we need to make some changes to our schematic's RuleFactory located in `cookbook/src/cookbook-component/index.ts`. All that we will need to change is the name of our RuleFactory. Here is an example of what our schematic's RuleFactory will look like after these changes:
+After this, we need to make some changes to our schematic's `RuleFactory` located in `cookbook/src/cookbook-component/index.ts`. All that we will need to change for now is the name of our `RuleFactory`. Here is an example of what our schematic's `RuleFactory` will look like after these changes:
 
 ```javascript
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-
 
 // You don't have to export the function as default. You can also have more than one rule factory
 // per file.
@@ -83,7 +82,6 @@ import * as path from 'path';
 
 const collectionPath = path.join(__dirname, '../collection.json');
 
-
 describe('cookbook-component schematic', () => {
   it('works', () => {
     const runner = new SchematicTestRunner('schematics', collectionPath);
@@ -94,7 +92,8 @@ describe('cookbook-component schematic', () => {
 });
 ```
 
-Next we need to prepare our template directory structure. We will do this by creating a directory named `files` in our schematic's directory. We need to create this directory at the following path: `cookbook/src/cookbook-component/files`.
+Now let's prepare our template directory structure. We will do this by creating a directory named `files` in our schematic's directory. We need to create this directory at the following path: `cookbook/src/cookbook-component/files`.
+
 This directory will house the templates for files that our schematic will create when invoked. For this schematic we will be creating just one template with the filename `__name@dasherize__.service.ts`. After we create this file we will need to make it look like this:
 
 ```javascript
@@ -109,17 +108,15 @@ export class <%= classify(name) %>Service {
 }
 ```
 
-
-Lastly, we need to create our schematic's schema file. We will create the file at the following path: `cookbook/src/cookbook-component/schema.json`.
-
+Lastly, let's create our schematic's schema file. We will create the file at the following path: `cookbook/src/cookbook-component/schema.json`.
 
 ## Cookbook-Component Implementation
 
-With our preparation taken care of, it's time to implement the core logic of our schematic. We want our new schematic to augment Angular's existing `component` schematic through which users of the Angular CLI can scaffold out new Angular components through the command `ng generate component`. To make this happen, we will we will need to complete two tasks. Firstly, we need to call the external, `component` schematic that Angular provides. Secondly, we need to chain this schematic with our own functionality that augments the existing `component` schematic by adding an optional flag which will allow for a side-car service to be created alongside this component. When this flag is specified, our schematic will create a `<component-name>.service.ts` file alongside the `<component-name>.component.ts` file previously created by the external, `component` schematic.
+With our preparation taken care of, it's time to implement the core logic of our schematic. We want our new schematic to augment Angular's existing `component` schematic. The `component` schematic enables users of the Angular CLI to scaffold out new Angular components by running the command `ng generate component`. In order to augment the `component` schematic, we will need to complete two tasks. Firstly, we need to call the external, `component` schematic that Angular provides. Secondly, we need to chain this schematic with our own functionality that augments the existing `component` schematic whilst adding an optional flag that will allow for a side-car service to be created alongside this component. When this flag is specified, our schematic will create a `<component-name>.service.ts` file alongside the `<component-name>.component.ts` file previously created by the external, `component` schematic.
 
 ### Step One - Schema Creation
 
-The first part of creating our cookbook component schematic will be to create a schema for our schematic. For more information on schemas - please see the "Schematic Metadata and Validation" section of the "Schematics Overview" page earlier in this book.
+The first part of creating our `cookbook-component` schematic will be to create a schema for our schematic. For more information on schemas - please see the *"Schematic Metadata and Validation"* sub-section of the *"Schematics Overview"* section found earlier in this book.
 
 We will want our `cookbook-component` schematic to take in a required `name` argument and an optional `service` argument. Here's what we want this schematic's `schema.json` to look like:
 
@@ -151,7 +148,7 @@ We will want our `cookbook-component` schematic to take in a required `name` arg
 }
 ```
 
-With our `schema.json` file successfully created, let's create its functional counterpart - the `schema.d.ts` file. This TypeScript-centric file's (It is aptly-named a declaration file - hence the `.d.`) sole purpose is to provide a usable TypeScript type definition that we can use within a Schematic's RuleFactory. This will give us some added type safety within our RuleFactory's code - allowing us to further validate the options which are passed in to our schematic. We want to create the `schema.d.ts` file within our `cookbook-component` schematic directory. We can easily create our `schema.d.ts` declaration file schema interface by looking at our schematic's `schema.json` file. Here is what our `schema.d.ts` file should look like:
+With our `schema.json` file successfully created, let's create its functional counterpart - the `schema.d.ts` file. This TypeScript-centric declaration (hence the `.d.`) file's sole purpose is to provide a usable TypeScript type definition that we can use within a Schematic's RuleFactory. This will give us some added type safety within our `RuleFactory`'s code - allowing us to further validate the options which are passed in to our schematic. We want to create the `schema.d.ts` file within our `cookbook-component` schematic directory. We can easily create our `schema.d.ts` declaration file schema interface by looking at our schematic's `schema.json` file. Here is what our `schema.d.ts` file should look like:
 
 ```javascript
 import { Schema as ComponentOptions} from '@schematics/angular/component/schema';
@@ -161,7 +158,8 @@ export interface Schema extends ComponentOptions {
     service?: boolean
 }
 ```
-In the above code we have simply created a `Schema` interface which is modeled after our `cookbook-component` schematic's `schema.json` which says that this schematic will expect a required `name` argument along with an optional `service` argument. We have also created this `Schema` interface to extend Angular's actual `component` schematic which is used by the Angular CLI in order to scaffold a new Angular component. Now all of the schematic options which are available to the `component` schematic will also be available to the `cookbook-component` schematic.
+
+In the above code we have simply created a `Schema` interface which is modeled after our `cookbook-component` schematic's `schema.json` which says that this schematic will expect a required `name` argument along with an optional `service` argument. We have declared this `Schema` interface as an extension of Angular's `component` schematic's `ComponentOptions`. Now all of the schematic options which are available to the `component` schematic will also be available to the `cookbook-component` schematic.
 
 Now that we have successfully modeled our `cookbook-component` schematic's available options, let's write some tests!
 
