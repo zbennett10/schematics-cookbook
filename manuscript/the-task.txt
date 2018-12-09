@@ -1,29 +1,30 @@
 # The Task
 
-Tasks are an important feature of almost any schematic. They are basically an abstraction over external commands - Git or Yarn commands, for example.
+`Tasks` are an important feature of almost any schematic. They are basically an abstraction over external CLI commands provided by tools such as Git or Yarn.
 
-Angular Schematics currently provides the following Tasks for creators of schematics:
+Angular Schematics currently provides the following `Tasks` for creators of schematics:
 
+| Task                        | Description                                                          |
+|-----------------------------|----------------------------------------------------------------------|
+| `NodePackageInstallTask`    | Runs either an `npm install` or `yarn install` command on a project. |
+| `NodePackageLinkTask`       | Runs either an `npm link` or `yarn link` command on a project.       |
+| `RepositoryInitializerTask` | Runs the `git init` command on a project.                            |
+| `RunSchematicTask`          | Runs an external schematic.                                          |
+| `TslintFixTask`             | Runs the `tslint --fix` command on a project.                        |
 
-`NodePackageInstallTask` - This Task runs either an `npm install` or `yarn install` command on a project.
+**Note:**
 
-`NodePackageLinkTask` - This Task runs either an `npm link` or `yarn link` command on a project.
+  Each one of the `Tasks` above also comes with an available options type. The available options can be found by traveling to Angular's `Task` source code [here](https://github.com/angular/angular-devkit-schematics-builds/tree/master/tasks). Once you visit that link it's fairly trivial to find the available options for the specific `Task` you want to work with.
 
-`RepositoryInitializerTask` - This Task runs the `git init` command on a project.
-
-`RunSchematicTask` - This Task runs an external schematic.
-
-`TslintFixTask` - This Task runs the `tslint --fix` command on a project.
-
-**Note:** Each one of the Tasks above also comes with an available options type. The available options can be found by traveling to [here](https://github.com/angular/angular-devkit-schematics-builds/tree/master/tasks) and finding the options for the specific Task you want to work with.
 ---
 
 ## Task Use
 
-In the this section, we will see examples of schematic RuleFactories which are set up to run Tasks. Remember the SchematicContext type from the "The Rule" section? Well, look closely, because you're about to see it in action.
+In the this section, we will see examples of schematic `RuleFactories` which put `Tasks` to use. Remember the `SchematicContext` type from the *"The Rule"* section? Look closely because it's time to put it to use!
 
 ```javascript
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics'; import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
+import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
 export function nodePackageInstallSchematic(options: any): Rule {
   return (tree: Tree, context: SchematicContext) => {
@@ -33,12 +34,13 @@ export function nodePackageInstallSchematic(options: any): Rule {
 }
 ```
 
-The above schematic , appropriately named '`nodePackageInstallSchematic`', is solely responsible for running a NodePackageInstallTask. It does this by passing in an instantiated NodePackageInstallTask to the `addTask()` method provided by its own SchematicContext. The `addTask()` method ensures that any Tasks which are passed to it will be executed within the context of the current schematic. 
+The above schematic , appropriately named '`nodePackageInstallSchematic`', is solely responsible for running a `NodePackageInstallTask`. It does this by passing in an instance of `NodePackageInstallTask` to the `addTask()` method provided by its own `SchematicContext`. The `addTask()` method ensures that any `Tasks` which are passed to it will be executed within the context of the current schematic.
 
-But what if we want to use Yarn instead of NPM to install our Node dependencies?
+"But what if I want to use Yarn instead of NPM to install our Node dependencies?", you ask.
 
 ```javascript
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics'; import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
+import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
 export function nodePackageInstallSchematic(options: any): Rule {
   return (tree: Tree, context: SchematicContext) => {
@@ -50,4 +52,10 @@ export function nodePackageInstallSchematic(options: any): Rule {
 }
 ```
 
-Here we are simply passing in a custom options object to our NodePackageInstallTask - specifically the '`packageManager`' option.
+Here we are simply passing in a custom `options` object to our `NodePackageInstallTask` - specifically the '`packageManager`' option.
+
+We won't go into every available `Task`/`options` object here as they are each quite simplistic and straightforward.
+
+**NOTE**
+  Unfortunately it is not currently possible to create your own `Tasks` without writing some seriously 'hacky' code. When writing this book I had first planned on having a section devoted to the creation of custom `Tasks`. I was saddened when I realized there wasn't any real support for this. If you are interested in this feature, you can track developments on [this](https://github.com/angular/angular-cli/issues/12678) GitHub issue.
+  
