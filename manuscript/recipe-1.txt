@@ -1,4 +1,4 @@
-# Recipe 1 - Altering Angular CLI's `ng generate component`
+# Recipe 1 - Altering Angular's Component Schematic
 
 In this recipe, we will create a schematic that adds functionality to Angular CLI's `ng generate component` command. Under the hood, Angular CLI's `ng generate component` command uses a Angular schematic named `component`. To view this schematic's source code, visit [here](https://github.com/angular/angular-cli/tree/master/packages/schematics/angular/component).
 

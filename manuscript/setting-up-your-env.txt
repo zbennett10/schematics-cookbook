@@ -16,4 +16,4 @@ Step 3: Create a test schematic by running the following commands:
 
 ---
 
-*Congratulations!* You have all of the dependencies needed to start creating your very own Angular Schematics. Feel free to familiarize yourself with the simple, test schematic we just created. In the following recipes, we will walkthrough creating some useful schematics of our own.
+*Congratulations!* You have all of the dependencies needed to start creating your very own schematics. Feel free to familiarize yourself with the simple, test schematic we just created. In the following recipes, we will conduct a thorough walkthough of schematics - creating some useful schematics of our own.
