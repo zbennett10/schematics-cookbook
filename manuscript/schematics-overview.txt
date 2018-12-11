@@ -7,13 +7,13 @@ As we journey deeper into the world of Angular Schematics, it's now time to disc
   /files
   index.ts
   index_spec.ts
-  schema.ts
+  schema.d.ts
   schema.json
 ```
 
-## Schematic Metadata and Validation - `schema.ts` and `schema.json`
+## Schematic Metadata and Validation
 
-The purpose of the `schema.json` and `schema.ts` files is to provide a schema for the schematic. These files are used by the Schematics Library and by the local `RuleFactory` found within the `index.ts`.
+The purpose of the `schema.json` and `schema.d.ts` files is to provide a schema for the schematic. These files are used by the Schematics Library and by the local `RuleFactory` found within the `index.ts`.
 
 Check out this commented example `schema.json` for a fake schematic - `schematic-one`:
 
@@ -69,7 +69,7 @@ Check out this commented example `schema.json` for a fake schematic - `schematic
 }
 ```
 
-Now let's view our `schema.ts` file. This file will be used directly by our schematic's `RuleFactory` to validate it's options.
+Now let's view our `schema.d.ts` file. This file will be used directly by our schematic's `RuleFactory` to validate it's options.
 
 ```javascript
 export interface Schema {
