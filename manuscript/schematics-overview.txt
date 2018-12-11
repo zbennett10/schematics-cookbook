@@ -12,6 +12,7 @@ As we journey deeper into the world of Angular Schematics, it's now time to disc
 ```
 
 ## Schematic Metadata and Validation - `schema.ts` and `schema.json`
+
 The purpose of the `schema.json` and `schema.ts` files is to provide a schema for the schematic. These files are used by the Schematics Library and by the local `RuleFactory` found within the `index.ts`.
 
 Check out this commented example `schema.json` for a fake schematic - `schematic-one`:

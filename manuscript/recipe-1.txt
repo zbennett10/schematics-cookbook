@@ -34,6 +34,18 @@ In order to install this NPM package run the following command in the root direc
 
 `npm install --save @schematics/angular@latest`
 
+Lastly, let's make one quick change to our project's `.gitignore`. In our `.gitignore`, we need to change the "Outputs" section to the following:
+
+```s
+# Outputs
+src/**/*.js
+src/**/*.js.map
+src/**/index.d.ts
+src/**/index_spec.d.ts
+```
+
+This will ensure that our `schema.d.ts` files will be picked up by source control.
+
 ## Creating Our First Recipe
 
 Now we need to change the name of the `cookbook` schematic which was auto-generated inside of our `cookbook` schematic collection when we first created it.
@@ -48,7 +60,8 @@ We are going to change this schematic's name from `cookbook` to `cookbook-compon
   "schematics": {
       "cookbook-component": {
       "description": "Generates a cookbook Angular component",
-      "factory": "./cookbook-component/index#cookbookComponent"
+      "factory": "./cookbook-component/index#cookbookComponent",
+      "schema": "./cookbook-component/schema.json"
       }
   }
 }

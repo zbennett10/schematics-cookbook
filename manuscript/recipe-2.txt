@@ -28,7 +28,8 @@ With these new files created, let's update our new schematic's reference inside 
   "node-api": {
     "aliases": [ "api" ],
     "description": "Generates a new Node API.",
-    "factory": "./node-api/index#nodeApi"
+    "factory": "./node-api/index#nodeApi",
+    "schema": "./node-api/schema.json"
   }
   ```
 
