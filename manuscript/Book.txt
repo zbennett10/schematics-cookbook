@@ -1,3 +1,4 @@
+dedication.txt
 introduction.txt
 schematics-collections-overview.txt
 schematics-overview.txt
