@@ -1,20 +1,18 @@
-# Recipe 2 - Scaffolding a new, Node Project
+# Recipe 2 - Scaffolding a Node Project
 
-In this recipe, we will create a schematic that will generate a new Node project. This will be a simple little project that will save our time by allowing us to easily generate a small Node server. We will call this schematic `node-api`. When we are done, we should be able to run this schematic and have a ready-to-use Node server complete with Express, server hot-reloading for development, and a simple REST implementation.
-
----
+In this recipe, we will create a schematic that will generate a new Node project. This will be a simple little project that we create in order to help us save time by allowing us to easily generate a Node server and API. We will call this schematic `node-api`. When we are done, we will be able to run this schematic and immediately have a ready-to-use Node server complete with Express, automatic server-restart for development, and a simple REST implementation.
 
 ## Getting Started
 
-Make sure that you are in the current directory of our `cookbook` schematics collection. If you haven't created your schematics collection yet, please see the preceding recipe's "Our Schematic Collection" section.
+Make sure that you are in the current directory of our `cookbook` schematics collection. If you haven't created your schematics collection yet, please see the preceding recipe's *"Our Schematic Collection"* section.
 
-First things first, let's generate a blank schematic using the name `node-api`. We can do this by running the following command within the `cookbook` directory:
+First things first, let's generate a blank schematic using the name `node-api`. We can do this by running the following command from within the `cookbook` directory:
 
 `schematics blank --name=node-api`
 
-This command will generate a new schematics collection if it is not currently located within an existing collection. Since we ran this command within an existing collection, it simply generated a new, blank schematic for us and updated our `collection.json` accordingly. Pretty nifty, huh?
+This command will generate a new schematics collection if it is not currently located within an existing collection. Since we ran this command within an existing collection, it simply generated a new, blank schematic for us. It even updated our `collection.json` accordingly! Pretty nifty, huh?
 
-Next, let's add in some additional boilerplate:
+Next, let's add in some additional boilerplate that we will need by following these steps:
 
 1. `cd` into `cookbook/src/node-api`
 2. Create a template directory named `files`
@@ -26,65 +24,66 @@ With these new files created, let's update our new schematic's reference inside 
 1. `cd` into `cookbook/src`
 2. Update our `node-api` schematic's reference in the `collection.json` by changing it to the following:
 
-    ```javascript
-      "node-api": {
-        "aliases": [ "api" ],
-        "description": "Generates a new Node API.",
-        "factory": "./node-api/index#nodeApi"
-      }
-    ```
-    Here we have simply changed our schematic's description and given our schematic an alias so that we can reference it by the name `api` instead of `node-api`.
+  ```javascript
+  "node-api": {
+    "aliases": [ "api" ],
+    "description": "Generates a new Node API.",
+    "factory": "./node-api/index#nodeApi"
+  }
+  ```
+
+With the above addition, we have simply changed our schematic's description and given our schematic an alias so that we can reference it by the name `api` instead of `node-api`.
 
 ## Schema Creation
 
-In this section we will create the schema for this recipe's schematic. Since the purpose of this schematic is simply to generate some boilerplate we will make its schema fairly simple. We will users of this schematic to be able to give the Node API it generates a name while also being able to specify the directory in which it should be generated.
+In this section we will create the schema for this recipe's schematic. Since the purpose of this schematic is simply to generate some boilerplate we will make its schema fairly simple. We will want users of this schematic to be able to give the Node API it generates a name while also being able to specify the directory in which it should be generated.
 
 Here's what our `schema.json` should look like in order for it to satisfy the above requirements:
 
 ```javascript
-    {
-        "$schema": "http://json-schema.org/schema",
-        "id": "NodeApi",
-        "title": "Node API",
-        "type": "object",
-        "properties": {
-        "name": {
-            "type": "string",
-            "description": "The name of the generated Node API",
-            "$default": {
-            "$source": "argv",
-            "index": 0
-            }
-        },
-        "directory": {
-            "description": "The directory in which to generate the Node API.",
-            "type": "string",
-            "default": false,
-            "alias": "dir"
-        }
-        },
-        "required": [
-        "name"
-        ]
-  }
+{
+  "$schema": "http://json-schema.org/schema",
+  "id": "NodeApi",
+  "title": "Node API",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the generated Node API",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      }
+    },
+    "directory": {
+      "description": "The directory in which to generate the Node API.",
+      "type": "string",
+      "default": false,
+      "alias": "dir"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}
 ```
 
-And here is what our `schema.d.ts` TypeScript declaration file should look like: 
+Here is what our `schema.d.ts` TypeScript declaration file should look like:
 
 ```javascript
-    export interface Schema {
-        name: string;
-        directory?: string;
-    }
+export interface Schema {
+    name: string;
+    directory?: string;
+}
 ```
 
-With these two schema files implemented we can be assured that any arguments we pass in to our schematic will be validated properly.
+With these two schema files now implemented, we can be assured that any arguments we pass in to our schematic will be validated properly.
 
 ## Writing Unit Tests
 
 It's time to write some unit tests!
 
-The goal in this section will be to write some unit tests which make four different assertions about the capabilities of our schematic. These assertions include:
+The goal in this section will be to write tests which make four different assertions about the capabilities of our schematic. These assertions are that:
 
 1. Our schematic creates the necessary Node API boilerplate.
 2. Our schematic is available via the "api" schematic alias.
@@ -153,37 +152,39 @@ describe('node-api', () => {
 });
 ```
 
-It's pretty simple right? In the above `index_spec.ts` file we are making the above four assertions using four different unit tests. In each one of these unit tests, we are using an instance of the Angular-provided `SchematicTestRunner` class to run our `node-api` schematic. As you can see there is some code that is repeated at the beginning of each one of these unit tests. Concerning this, I'll leave an exercise here for you, the reader, to simplify these unit tests by using the `beforeEach` hook which the `Jasmine` testing framework provides.
+It's pretty simple right? In the above `index_spec.ts` file we are making the above four assertions using four different unit tests. In each one of these unit tests, we are using an instance of the Angular-provided `SchematicTestRunner` class to run our `node-api` schematic. As you can see there is some code that is repeated at the beginning of each one of these unit tests. Concerning this, I'll leave an exercise here for you, the reader, to simplify these unit tests by using the `beforeEach` hook which the Jasmine testing framework provides globally.
 
 ## Creating Our File Templates
 
-With our unit tests written, let's lay down the final piece of preparation before we start implementing our schematic's RuleFactory! In a previous section, we created the customary `files` directory which is meant to house any file templates which our schematic will process. In this section we are going to add our templates into this directory by using the following steps:
+With our unit tests written, let's lay down the final piece of preparation before we start implementing our schematic's `RuleFactory`! In a previous section, we created the customary `files` directory which is meant to house any file templates which our schematic will process. In this section we are going to add our templates into this directory by following these steps:
 
-1. Travel to the [GitHub repo](https://github.com/zbennett10/schematics-recipe-2-node-api) for these files.
+1. Travel to this [GitHub repo](https://github.com/zbennett10/schematics-recipe-2-node-api).
 2. Click on the `Clone or download` button on the right side of the page.
 3. Click the `Download ZIP` button.
 4. Unzip the contents of the downloaded folder into our schematic's `files` directory.
 
 When all is said and done, your `files` directory should look like this:
 
+```s
 `/files/`
-    `/src/`
-        `/mock/`
-            `books.json`
-        `index.types.ts`
-        `routes.ts`
-        `server.ts`
-    `nodemon.json`
-    `package.json`
-    `README.md`
-    `tsconfig.json`
-    `tslint.json`
+  `/src/`
+    `index.types.ts`
+    `routes.ts`
+    `server.ts`
+    `/mock/`
+      `books.json`
+  `nodemon.json`
+  `package.json`
+  `README.md`
+  `tsconfig.json`
+  `tslint.json`
+```
 
-### Implementing the "RuleFactory"
+## Implementing the RuleFactory
 
 With our templates ready, it's finally time to write the core logic of our schematic!
 
-Let's jump in to the code!
+Time to code!
 
 ```javascript
 import { strings } from '@angular-devkit/core';
@@ -230,23 +231,23 @@ function installNodeDependencies(workingDirectory: string): Rule {
 }
 ```
 
-Let's dive in to the code above. In the core of our schematic's `RuleFactory` we first determine the correct directory that we should generate our template within. Once we have this directory, we create our template `Source`. From here we return a `Rule` from our schematic which is generated by the use of the `chain` function that the Angular Schematic's library provides. We then feed two functions into `chain` - each of which return a `Rule` themselves. The first function that we feed into `chain` is the `mergeWith` function which is provided by Angular. This function takes our template `Source` and applies our template to this schematic's `Tree`. After this, we pass in a custom function `installNodeDependencies` to `chain`. Our function `installNodeDependencies` returns a `Rule` which uses the Angular-provided `NodePackageInstallTask`. In this function we take in the directory which houses our templated `package.json` file and create a `NodePackageInstallTask` which our `SchematicContext` enqueues and executes.
+In the core of this schematic's `RuleFactory` we first determine the correct directory that we should generate our template within. Once we have this directory, we create our template `Source`. From here, we return a `Rule` from our schematic which is generated by the use of the `chain` function that the Angular Schematic's library provides. We feed two functions into `chain` - each of which return a `Rule` themselves. The first function that we feed into `chain` is the `mergeWith` function which is provided by Angular. This function takes our template `Source` and applies our template to this schematic's `Tree`. After this, we pass in a custom function `installNodeDependencies` to `chain`. Inside of `installNodeDependencies` we take in the directory which houses our templated `package.json` file and create a `NodePackageInstallTask` which our `SchematicContext` susequently enqueues and executes.
 
-Now let's see if our tests our passing...
+Now, for the moment of truth! Let's see if our tests our passing...
 
-First change directory into the root directory of our schematics collection and then run:
+First change directory into the root directory of your schematics collection and then run:
 
 `npm test`
 
-You should see all tests passing for our new schematic!
+You should see all tests passing!
 
-### Step Five - Functionally Testing Our Schematic
+## Step Five - Functionally Testing Our Schematic
 
 It's time to put this new schematic to the test! In the following steps we will use our new schematic to generate a Node API for us and verify that it works.
 
-First, let's use `npm link` to make our newly updated schematic collection available globally so that we can easily generate our new project. Before running the following command, make sure that you are in the root folder of our schematic collection (`cookbook`). Once there, run `npm link`.
+First, let's use `npm link` to make our newly updated schematic collection available globally so that we can easily generate our new project. Before running the following command, make sure that you are in the root folder of your schematic collection (`cookbook`). Once there, run the CLI command - `npm link`.
 
-With our updated `cookbook` schematic collection available for use, we can now use our new `node-api` schematic.
+With our updated `cookbook` schematic collection now available for use globally, we can test our new `node-api` schematic.
 
 First, `cd` into a directory of your choosing. Once in your chosen directory, run the following command to use our new schematic:
 
@@ -264,22 +265,21 @@ CREATE /test/src/index.types.ts (161 bytes)
 CREATE /test/src/routes.ts (3551 bytes)
 CREATE /test/src/server.ts (301 bytes)
 CREATE /test/src/mock/books.json (18751 bytes)
-...
 ```
 
-You should also see evidence of `npm` installing all of our new project's Node dependencies! Now let's check out our new schematic. Run the following command to enter in to your new project's root directory:
+You should also quickly see evidence from your console that NPM is installing all of your new project's Node dependencies! Now run the following command to enter in to your new project's root directory:
 
 `cd test-api`
 
-Let's test that our Node API works by doing the following:
+Let's test that our new API works by doing the following:
 
 1. Run `npm start` in your terminal.
 2. Navigate to `localhost:8080` in your browser.
 
 You should see a list of books in your browser window!
 
-You also have a working development environment by running the command `npm run dev`.
+You now also have a working development environment by running the command `npm run dev`. After starting your server with `npm run dev`, any code changes that you make will cause the server to automatically restart.
 
 ## Conclusion
 
-Good job! With the completion of this second recipe, you now have a working example of how you can use Angluar Schematics to template our a custom Node project. This template could easily be expanded to encompass other languages/environments. For instance, instead of a new Node API, you could have this schematic generate boilerplate for a new Scala or Go project. The possibilities are endless!
+Good job! You now have seen how you can use Angluar Schematics to scaffold out a custom Node project. This template could easily be altered/expanded in order to encompass other languages/environments. For instance, instead of generating a Node API, you could have this schematic generate boilerplate for a new Scala or Go project. The possibilities are endless!

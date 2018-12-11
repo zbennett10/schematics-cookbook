@@ -5,6 +5,6 @@ So far in this book we have taken a look into the world of Angular Schematics an
 Now it's time to bring everything together. Enough talk - let's learn by example! In the following sections we are going to set up our environment and then take a look at two different schematic "recipes" - this is a cookbook after all! Using the knowledge base we have established in the previous sections, we are now well equipped to create our own, useful schematics. These recipes will show us how we can both augment the schematics that Angular CLI provides and scaffold out new Node projects. This cookbook includes the following recipes:
   
 - Recipe 1 - "Augmenting Angular's Component Schematic"
-- Recipe 2 - "Scaffolding a new, Node Project"
+- Recipe 2 - "Scaffolding a Node Project"
 
 Enjoy!
