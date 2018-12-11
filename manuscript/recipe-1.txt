@@ -161,13 +161,13 @@ export interface Schema extends ComponentOptions {
 
 In the above code we have simply created a `Schema` interface which is modeled after our `cookbook-component` schematic's `schema.json` which says that this schematic will expect a required `name` argument along with an optional `service` argument. We have declared this `Schema` interface as an extension of Angular's `component` schematic's `ComponentOptions`. Now all of the schematic options which are available to the `component` schematic will also be available to the `cookbook-component` schematic.
 
-Now that we have successfully modeled our `cookbook-component` schematic's available options, let's write some tests!
+Now that we have successfully modeled our `cookbook-component` schematic's available options, let's write some unit tests!
 
 ### Step Two - Writing Unit Tests
 
-In this section we will practice a little TDD (Test-Driven Development) by writing our schematic's unit tests before its RuleFactory logic.
+In this section we will practice a little TDD (Test-Driven Development) by creating our schematic's unit tests before we implement its `RuleFactory` logic.
 
-Now we are ready to write our first unit test. Let's just dive into the code and explain afterwards!
+Let's just dive into the code!
 
 ```javascript
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
@@ -224,10 +224,12 @@ describe('cookbook-component schematic', () => {
 });
 ```
 
-In the above test file we have created two unit units. Before each unit test, we make sure to run Angular's `workspace` and `application` schematics. Running these schematics helps us to fake the pre-existing `Tree` that will be available to our `cookbook-component` schematic when it is used within an Angular application. `The first unit test runs the `cookbook-component` schematic using the provided `SchematicTestRunner` class and then asserts that a service file is created in the `Tree` when the `service` flag is set to `true`. The second unit test simply tests the opposite condition. 
+In the above test file we have created two unit units. Before each unit test, we make sure to run Angular's `workspace` and `application` schematics through the `beforeEach` "hook" which is globally available via our test runner. Running these schematics helps us to generate the pre-existing `Tree` that will be available to our `cookbook-component` schematic when it is used within an Angular application. 
 
-*Note:* By running `npm run test` inside of the project root you can see the status of these tests!
+The first unit test runs the `cookbook-component` schematic using the provided `SchematicTestRunner` class and then asserts that a service file is created in the `Tree` when the `service` flag is set to `true`. The second unit test simply tests the opposite condition.
 
+**Note:**
+  By running the `npm test` command from inside of the project root you can see the status of these tests!
 
 ### Step Three - Implementing our Schematic's RuleFactory
 
@@ -235,10 +237,10 @@ Now it's time to code the logic of the `cookbook-component` schematic's `RuleFac
 
 ```javascript
 import { strings } from '@angular-devkit/core';
-import { 
-  Rule, 
+import {
+  Rule,
   SchematicsException,
-  Tree, 
+  Tree,
   externalSchematic,
   branchAndMerge,
   mergeWith,
@@ -273,7 +275,7 @@ export function cookbookComponent(options: CookbookComponentOptions): Rule {
       if (!projectName) {
         throw new SchematicsException('The option \'project\' is required');
       }
-      
+
       const project = getProject(tree, projectName);
 
       if (options.path === undefined || options.path === null) {
@@ -300,43 +302,43 @@ export function cookbookComponent(options: CookbookComponentOptions): Rule {
     );
   };
 }
-
 ```
 
-Let's break this down. At a high level, the `cookbook-component` `RuleFactory` above is returning a `Rule` that calls Angular's `component` schematic and merging the resulting `Tree` with an optional, service template `Source`.
+Let's break this down a bit further...
 
-We first determine whether or not this schematic needs to generate a service for the soon-to-be-generated component. If a service is not needed, we simply run Angular's `component` schematic and return the resulting `Rule`. However, if a service needs to be generated, the `RuleFactory` fetches the current Angular `WorkspaceSchema` by using the provided utility function `getWorkspace`. This schema is then used to collect the default, project name of the current Angular workspace. In turn, this project name is to be used to collect the current `WorkspaceProject` in the event that a `project` option is not passed into the schematic. We then pass this `WorkspaceProject` into the `buildDefaultPath` utility function in the event that a `path` option is not passed into the `cookbook-component` schematic. The `buildDefaultPath` utility function is used to fetch the correct, default path for a given Angular project. After this, we use the `parseName` utility function in order to generate the correct, normalized `Path` that will house our new service file. Once we have this path, we generate a template `Source` which contains our templated, service file. Finally, we end our schematic by constructing a new `Rule` and `Tree` which is merged with the `Tree` that is initially passed into our schematic using the `branchAndMerge` function. We create this new `Rule` and `Tree` by using the `chain` function. First, we call Angular's `component` schematic through the `externalSchematic` function. The resulting `Rule` generated by `externalSchematic` is then chained with a `Rule` generated by either the `mergeWith` or `noop` function. If a service needs to be generated, we use the `mergeWith` function to merge our service template `Source` with the previous `Rule`. If no service is needed, we generate an empty `Rule` using the `noop` function.
+In this `RuleFactory` above, we first determine whether or not this schematic needs to generate a service for the soon-to-be-generated component. If a service is not needed, we simply run Angular's `component` schematic and return the resulting `Rule`. However, if a service needs to be generated, the `RuleFactory` fetches the current Angular `WorkspaceSchema` by using the provided utility function `getWorkspace`. This schema is then used to collect the default, project name of the current Angular workspace. In turn, this project name is to be used to collect the current `WorkspaceProject` in the event that a `project` option is not passed into the schematic. We then pass this `WorkspaceProject` into the `buildDefaultPath` utility function in the event that a `path` option is not passed into the `cookbook-component` schematic. The `buildDefaultPath` utility function is used to fetch the correct, default path for a given Angular project. After this, we use the `parseName` utility function in order to generate the correct, normalized `Path` that will house our new service file. Once we have this path, we generate a template `Source` which contains our templated, service file. Finally, we end our schematic by constructing a new `Rule` and `Tree` which is merged with the `Tree` that is initially passed into our schematic using the `branchAndMerge` function. We create this new `Rule` and `Tree` by using the `chain` function. First, we call Angular's `component` schematic through the `externalSchematic` function. The resulting `Rule` generated by `externalSchematic` is then chained with a `Rule` generated by either the `mergeWith` or `noop` function. If a service needs to be generated, we use the `mergeWith` function to merge our service template `Source` with the previous `Rule`. If no service is needed, we generate an empty `Rule` using the `noop` function.
 
-Let's run our unit tests again! First change directory into the root directory of our schematics collection then run:
+Let's run our unit tests again to make sure this works! First, change directory into the root directory of your schematics collection then run:
 
 `npm test`
 
 You should see both tests passing!
 
-
 ### Step Four - Testing Our Schematic in an Angular Application
 
-Now that we have a unit-tested schematic - let's test it from within a real Angular app.
+Now that we have a unit-tested schematic - let's test it from within a real Angular application.
 
-First, change your current working directory to the root directory of our `cookbook` schematic collection. Then we need to compile our project. Lets do this by running `npm run build`.
+First, change your current working directory into the root directory of your `cookbook` schematic collection. Now, compile the project by running `npm run build`.
 
-From there we are going to run the command `npm link`. This command will create a symlink between our `cookbook` schematic collection NPM package and our global, `node_modules` folder.
+From there, run the command `npm link`. This command will create a symlink between our `cookbook` schematic collection and our global, `node_modules` folder - making our project available to be linked with other NPM projects on our system.
 
-From there, we want to generate a new Angular app by running the following commands from a directory of our choosing (preferably not the `cookbook` schematic collection root directory!):
+From here, generate a new Angular application by running the following commands from within a directory of your choosing (preferably not the `cookbook` schematic collection root directory, though):
 
 `ng new cookbook-test-app`
+
 `cd cookbook-test-app`
 
-Now we are in our new, Angular test app. Now let's make our `cookbook` schematic collection available to our Angular app. From inside this directory let's run `npm link cookbook`;
+Now we are in our new, Angular test application. Let's make our `cookbook` schematic collection available to our Angular application. From inside this directory let's run `npm link cookbook`;
 
 Finally! Let's test our new `cookbook-component` by running the following commands:
 
-`cd src/app`;
+`cd src/app`
+
 `ng g cookbook:cookbook-component --name test --service`
 
-Voila!
+And, *Voila!*
 
-You should now see a new `test` directory. If you `cd` into this directory you should now see your new test component along with a side-car, `test.service.ts` file!
+You should now see a new directory named `test`. If you `cd` into this directory you should now see your new test component along with a side-car, `test.service.ts` file!
 
 ## Conclusion
 
