@@ -128,7 +128,12 @@ describe('node-api', () => {
 
     expect(filePaths.every(path => {
       const fileContents: Buffer | null = tree.read(path);
-      if(!fileContents) throw new SchematicsException(`Unable to read ${fileContents} at path: ${path}`);
+      if(!fileContents) {
+        throw new SchematicsException(
+                `Unable to read ${fileContents} at path: ${path}`
+              );
+      }
+
       return fileContents.toString('utf-8').includes('test-app');
     })).toBe(true);
   });
@@ -204,7 +209,7 @@ import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { Schema as NodeApiSchematicOptions } from './schema';
 
 export function nodeApi(options: NodeApiSchematicOptions): Rule {
-    const templateDirectory = `${options.directory ? options.directory : ''}/${options.name}`;
+    const templateDirectory = `${options.directory || ''}/${options.name}`;
     const templateSource = apply(
       url('./files'), [
         template({

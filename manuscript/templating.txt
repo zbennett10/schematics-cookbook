@@ -105,13 +105,15 @@ In this section we digress into the available utility functions that Angular pro
 
 ```javascript
 /*
-    This function converts a camelized string into a lower case, underscore-delimited string.
+    This function converts a camelized string into a lower case,
+    underscore-delimited string.
 */
 decamelize('helloWorld');   // 'hello_world'
 
 
 /*
-    This function converts underscores, spaces and camel-case with dashes - producing a dash-delimited string.
+    This function converts underscores, spaces and camel-case with
+    dashes - producing a dash-delimited string.
 */
 dasherize('helloWorld');    // 'hello-world'
 dasherize('hello_world');  // 'hello-world'
@@ -145,7 +147,7 @@ capitalize('hello-world');    // 'Hello-world'
 capitalize('helloWorld');  // 'HelloWorld'
 ```
 
-The above helper functions, along with any other user-created functions are made available to the `template()` `Rule` by simply passing them in to the `Rule` via the `options` argument. Here's an example:
+The above helper functions, along with any other user-created functions are made available to the `template` `Rule` by simply passing them in to the `Rule` via the `options` argument. Here's an example:
 
 ```javascript
 import { mergeWith, apply, url, template, Rule } from '@angular-devkit/schematics';

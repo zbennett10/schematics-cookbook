@@ -55,7 +55,7 @@ This method merges two `Trees` using an optional `MergeStrategy`.
 **NOTE: Schematics provides the following types of `MergeStrategies`:**
 
 - Default: Overwrites are not allowed (The safest!)
-- Error: This strategy errors out if two files have identical paths (Provided as an alternative to Default)
+- Error: This strategy errors out if two files have identical paths
 - ContentOnly: Only overwrite file contents
 - Overwrite: Allow overwrite, creation and deletion conflicts
 - AllowOverwriteConflict: Only allow overwrite conflicts
